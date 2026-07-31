@@ -12,8 +12,14 @@
 <link rel="icon" type="image/png" href="assets/img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Left as an explicit weight list on purpose. The `wght@300..900` range form looks like
+     it should be leaner, but Google serves the same variable files either way: both URLs
+     resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
+     (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css?v=2">
+<!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
+<link rel="preload" as="image" href="assets/img/logo.png">
 </head>
 <body>
 
@@ -26,7 +32,7 @@
 
 <!-- ===== PRELOADER ===== -->
 <div class="preloader">
-  <div class="pre-mark"><img src="assets/img/logo.png" alt="Job Power"></div>
+  <div class="pre-mark"><img src="assets/img/logo.png" alt="Job Power" fetchpriority="high"></div>
   <div class="pre-bar"><span></span></div>
   <div class="pre-meta"><span class="pre-count">000</span><span class="pre-word">Job Power HR</span></div>
 </div>
@@ -439,12 +445,18 @@
 </button>
 <a class="totop" href="#top" aria-label="חזרה למעלה">↑</a>
 
-<!-- ===== SCRIPTS ===== -->
-<script src="assets/vendor/gsap.min.js"></script>
-<script src="assets/vendor/ScrollTrigger.min.js"></script>
-<script src="assets/vendor/lenis.min.js"></script>
-<script src="assets/vendor/hls.light.min.js"></script>
-<script src="assets/js/a11y.js"></script>
-<script src="assets/js/main.js?v=2"></script>
+<!-- ===== SCRIPTS =====
+     defer, so none of these hold up the parser: they download in parallel while the
+     page is still being read, then run in this order once it is parsed. main.js boots
+     off readyState/DOMContentLoaded either way, so the order it relies on is kept.
+     hls.light.min.js is NOT here on purpose — 296 KB, larger than everything else put
+     together, and needed only by browsers with no native HLS. Safari and iOS never use
+     it. main.js now fetches it on demand, after first paint, and only if the browser
+     actually cannot play the stream by itself. -->
+<script defer src="assets/vendor/gsap.min.js"></script>
+<script defer src="assets/vendor/ScrollTrigger.min.js"></script>
+<script defer src="assets/vendor/lenis.min.js"></script>
+<script defer src="assets/js/a11y.js"></script>
+<script defer src="assets/js/main.js?v=3"></script>
 </body>
 </html>

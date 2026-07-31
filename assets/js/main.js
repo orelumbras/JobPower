@@ -13,6 +13,23 @@
   /* ===============================================================
      1. FIXED VIDEO BACKGROUND (HLS via hls.js; gradient fallback)
      =============================================================== */
+  /* hls.js is 296 KB — bigger than every other script on this page combined — and it is
+     a polyfill: Safari and iOS play this stream natively and never touch it. It used to
+     be a plain <script> tag, so every visitor paid for it before the page could finish
+     loading, most of them for nothing. Now it is fetched only by browsers that actually
+     cannot play HLS, and only once the page is up, so it never competes with first
+     paint. It is a decorative background video — nothing here is worth blocking for. */
+  function loadHls() {
+    if (window.Hls) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = doc.createElement('script');
+      s.src = 'assets/vendor/hls.light.min.js';
+      s.onload = resolve;
+      s.onerror = reject;
+      doc.head.appendChild(s);
+    });
+  }
+
   function initVideoBg() {
     const v = doc.getElementById('bgv');
     if (!v || reduceMotion) return;            // gradient tint stays as the bg
@@ -21,14 +38,20 @@
     if (v.canPlayType('application/vnd.apple.mpegurl')) {
       v.src = VIDEO_SRC;                        // Safari / iOS native HLS
       v.addEventListener('loadeddata', ready, { once: true });
-    } else if (window.Hls && window.Hls.isSupported()) {
-      const hls = new Hls({ capLevelToPlayerSize: true, maxBufferLength: 18, startLevel: -1 });
-      hls.loadSource(VIDEO_SRC);
-      hls.attachMedia(v);
-      hls.on(Hls.Events.MANIFEST_PARSED, ready);
-      hls.on(Hls.Events.ERROR, (_e, d) => {     // on fatal error just keep the gradient
-        if (d && d.fatal && d.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-      });
+    } else {
+      // idle, so the fetch lands after the page has painted and settled
+      const start = () => loadHls().then(() => {
+        if (!window.Hls || !window.Hls.isSupported()) return;   // no HLS → keep the gradient
+        const hls = new Hls({ capLevelToPlayerSize: true, maxBufferLength: 18, startLevel: -1 });
+        hls.loadSource(VIDEO_SRC);
+        hls.attachMedia(v);
+        hls.on(Hls.Events.MANIFEST_PARSED, ready);
+        hls.on(Hls.Events.ERROR, (_e, d) => {   // on fatal error just keep the gradient
+          if (d && d.fatal && d.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+        });
+      }).catch(() => {});                        // download failed → gradient, no console noise
+      if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 2500 });
+      else setTimeout(start, 200);
     }
     // save resources when the tab is hidden
     doc.addEventListener('visibilitychange', () => {
