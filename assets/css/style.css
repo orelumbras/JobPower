@@ -219,37 +219,66 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 /* ====================================================================
    HERO
    ==================================================================== */
+/* Two columns instead of one centred stack. Everything centred is what made this read as
+   empty: a narrow ribbon of text down the middle with dead space either side and nothing
+   holding the edges. Now the copy holds the reading side (right, in RTL) and the mark
+   holds the other, with a hairline strip closing the bottom — the hero has edges. */
 .hero{position:relative;min-height:100vh;min-height:100svh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-  padding:calc(var(--nav-h) + 28px) var(--pad) 92px}
-.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:.6rem;margin-bottom:2rem;
-  font-size:.78rem;font-weight:500;letter-spacing:.14em;color:var(--text-mute);text-transform:none}
-/* The mark as atmosphere. Oversized and sunk behind the content at low opacity, it reads
-   as the field the hero sits in rather than a badge sitting on top of it — which is what
-   made it feel stuck. It also stops competing with the wordmark, since at this scale it
-   is texture, not a second statement of the name. Sits above the fixed video (z -3) and
-   below .hero-inner (z 2). */
-.hero-wm{position:absolute;inset:0;z-index:0;display:grid;place-items:center;pointer-events:none;overflow:hidden}
-.hero-wm img{width:min(78vw,760px);opacity:.075;
-  filter:drop-shadow(0 30px 90px rgba(124,92,224,.35));will-change:transform}
+  display:grid;grid-template-rows:1fr auto;text-align:start;
+  padding:calc(var(--nav-h) + 24px) 0 0}
+.hero-inner{position:relative;z-index:2;align-self:center;width:100%;
+  display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+  align-items:center;gap:clamp(1.5rem,4vw,4rem)}
+.hero-copy{min-width:0}
+.hero-eyebrow{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;
+  font-size:.78rem;font-weight:500;letter-spacing:.14em;color:var(--text-mute)}
+.hero-eyebrow .he-rule{flex:none;width:clamp(24px,4vw,54px);height:1px;background:var(--line-v)}
+
+/* The mark, at a size that lets it hold its half of the composition. The halo behind it
+   is what stops a flat PNG from looking pasted onto the video. */
+.hero-figure{position:relative;display:grid;place-items:center;min-width:0}
+.hero-figure img{position:relative;z-index:1;width:min(36vw,410px);
+  filter:drop-shadow(0 34px 70px rgba(124,92,224,.55))}
+.hf-halo{position:absolute;width:min(46vw,540px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,92,224,.34),rgba(124,92,224,.09) 46%,transparent 68%);
+  filter:blur(14px)}
 
 .hero-brand{direction:rtl;font-family:var(--font-he);font-weight:900;line-height:.94;letter-spacing:-.02em;
-  font-size:clamp(2.9rem,10vw,6.4rem);color:#fff;text-shadow:0 10px 70px rgba(124,92,224,.5);margin-bottom:.55rem}
+  font-size:clamp(2.7rem,7.4vw,5.6rem);color:#fff;text-shadow:0 10px 70px rgba(124,92,224,.5);margin-bottom:.55rem}
 .hero-brand .char{display:inline-block;will-change:transform}
-.hero-tagline{direction:ltr;font-family:var(--font-lat);font-weight:600;font-size:clamp(1.05rem,3.4vw,2.1rem);
+.hero-tagline{direction:ltr;font-family:var(--font-lat);font-weight:600;font-size:clamp(1.05rem,2.6vw,1.9rem);
   letter-spacing:.01em;color:var(--text-soft)}
 .hero-tagline .grad-text{font-weight:700}
 .hero-tagline .reddot{color:var(--v3);font-weight:700}
-.hero-sub{margin:1.5rem auto 0;max-width:540px;color:var(--text-soft);font-weight:300;font-size:clamp(1.02rem,1.8vw,1.2rem)}
-.hero-btns{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin-top:2.4rem}
+.hero-sub{margin:1.4rem 0 0;max-width:46ch;color:var(--text-soft);font-weight:300;font-size:clamp(1.02rem,1.6vw,1.16rem)}
+.hero-btns{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:flex-start;margin-top:2.2rem}
 
-.scroll-ind{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;
-  display:flex;flex-direction:column;align-items:center;gap:.7rem;color:var(--text-faint);
-  font-size:.7rem;letter-spacing:.25em;writing-mode:vertical-rl;text-orientation:mixed}
-.scroll-ind .scroll-rule{width:1px;height:48px;background:linear-gradient(var(--v4),transparent);
+/* the base: a hairline ledger closing the hero, with the scroll cue living in it rather
+   than floating over the middle */
+.hero-strip{display:flex;align-items:center;gap:clamp(1.2rem,4vw,3rem);flex-wrap:wrap;
+  border-top:1px solid var(--line);margin-inline:var(--pad);padding:1rem 0 1.15rem;
+  font-size:.8rem;color:var(--text-mute)}
+.hs-item{display:inline-flex;align-items:baseline;gap:.45rem}
+.hs-item b{font-family:var(--font-lat);font-weight:700;font-size:1rem;color:var(--text)}
+.hs-scroll{display:inline-flex;align-items:center;gap:.7rem;margin-inline-start:auto;
+  font-size:.7rem;letter-spacing:.25em;color:var(--text-mute)}
+.hs-scroll .scroll-rule{width:34px;height:1px;
+  background:linear-gradient(90deg,var(--v4),transparent);
   animation:scrolldrop 1.8s var(--ease) infinite}
-@keyframes scrolldrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+@media (max-width:820px){
+  /* one column, mark first: it introduces, the copy answers */
+  .hero-inner{grid-template-columns:1fr;gap:clamp(1.2rem,4vw,2rem);justify-items:start}
+  .hero-figure{order:-1;justify-self:start}
+  .hero-figure img{width:min(42vw,190px)}
+  .hf-halo{width:min(58vw,260px)}
+  .hero-strip{gap:.9rem 1.4rem;font-size:.75rem}
+  .hs-scroll{margin-inline-start:0}
+}
+
+/* the cue now lies along the strip, so it sweeps sideways rather than dropping */
+@keyframes scrolldrop{0%{transform:scaleX(0);transform-origin:right}50%{transform:scaleX(1);transform-origin:right}
+  50.1%{transform-origin:left}100%{transform:scaleX(0);transform-origin:left}}
 
 /* ====================================================================
    MARQUEE
