@@ -475,8 +475,23 @@
   /* ===============================================================
      BOOT
      =============================================================== */
+  /* Touch: drive the hover states from position instead. A thin band a little above the
+     middle of the screen (38%-48% of the viewport) acts as the pointer, so cards light
+     as they arrive rather than requiring a tap that would otherwise navigate. */
+  function initBandStates() {
+    if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
+    const els = doc.querySelectorAll('.svc, .wcard, .crow, .tcard');
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.target.classList.toggle('in-band', e.isIntersecting)),
+      { rootMargin: '-38% 0px -52% 0px', threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+  }
+
   function boot() {
     initVideoBg();
+    initBandStates();
     initCursor();
     initNav();
     initCounters();

@@ -616,3 +616,22 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
   [data-reveal],[data-reveal-stagger]>*{opacity:1!important;transform:none!important;clip-path:none!important}
   .bg-video{display:none}
 }
+
+/* ====================================================================
+   TOUCH: STATE BY POSITION, NOT BY TOUCH
+   A phone has no hover, so every :hover state above simply never fired there.
+   Rather than turn them into tap targets, the element lights as it crosses a band
+   just above the middle of the screen — scrolling becomes the pointer. The class is
+   set by an IntersectionObserver (see initBandStates).
+   ==================================================================== */
+@media (hover:none){
+  .svc.in-band{background:var(--glass-2)}
+  .svc.in-band::before{transform:scaleX(1)}
+  .svc.in-band .svc-idx{color:var(--v4)}
+  .svc.in-band li{color:var(--text-soft)}
+  .wcard.in-band{background:var(--glass-2)}
+  .wcard.in-band::before{transform:scaleX(1)}
+  .wcard.in-band .wcard-idx{color:var(--v4)}
+  .crow.in-band .crow-arr{color:var(--v4);transform:translateX(-6px) translateY(6px)}
+  .tcard.in-band{border-color:var(--line-v);transform:translateY(-2px)}
+}
