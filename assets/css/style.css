@@ -225,8 +225,14 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:.6rem;margin-bottom:2rem;
   font-size:.78rem;font-weight:500;letter-spacing:.14em;color:var(--text-mute);text-transform:none}
-.hero-logo{width:clamp(124px,15vw,170px);margin-bottom:1.3rem}
-.hero-logo img{width:100%;filter:drop-shadow(0 16px 44px rgba(124,92,224,.55))}
+/* The mark as atmosphere. Oversized and sunk behind the content at low opacity, it reads
+   as the field the hero sits in rather than a badge sitting on top of it — which is what
+   made it feel stuck. It also stops competing with the wordmark, since at this scale it
+   is texture, not a second statement of the name. Sits above the fixed video (z -3) and
+   below .hero-inner (z 2). */
+.hero-wm{position:absolute;inset:0;z-index:0;display:grid;place-items:center;pointer-events:none;overflow:hidden}
+.hero-wm img{width:min(78vw,760px);opacity:.075;
+  filter:drop-shadow(0 30px 90px rgba(124,92,224,.35));will-change:transform}
 
 .hero-brand{direction:rtl;font-family:var(--font-he);font-weight:900;line-height:.94;letter-spacing:-.02em;
   font-size:clamp(2.9rem,10vw,6.4rem);color:#fff;text-shadow:0 10px 70px rgba(124,92,224,.5);margin-bottom:.55rem}

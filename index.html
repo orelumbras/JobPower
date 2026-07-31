@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=9">
+<link rel="stylesheet" href="assets/css/style.css?v=11">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -70,12 +70,13 @@
 
 <!-- ===== HERO ===== -->
 <header class="hero" id="top">
+  <!-- the mark as atmosphere rather than a badge: oversized, sunk behind the content, and
+       drifting at its own rate as you scroll. Decorative, so it is hidden from assistive
+       tech — the h1 below already carries the name. -->
+  <div class="hero-wm" aria-hidden="true"><img src="assets/img/logo.png" alt=""></div>
+
   <div class="hero-inner container">
     <p class="hero-eyebrow" data-reveal="rise">גיוס והשמת משאבי אנוש — חדרה — מאז 2010</p>
-
-    <div class="hero-logo" data-reveal="rise">
-      <img src="assets/img/logo.png" alt="Job Power HR">
-    </div>
 
     <h1 class="hero-brand"><span class="split">ג'וב פאוור</span></h1>
     <p class="hero-tagline" data-reveal="rise">Find Your <span class="grad-text">Next Job</span><span class="reddot">.</span></p>
@@ -508,6 +509,6 @@
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
 <script defer src="assets/js/a11y.js"></script>
-<script defer src="assets/js/main.js?v=12"></script>
+<script defer src="assets/js/main.js?v=14"></script>
 </body>
 </html>

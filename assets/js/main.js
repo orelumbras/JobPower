@@ -218,12 +218,16 @@
       });
       gsap.set('.hero-brand .char', { yPercent: 120, opacity: 0 });
     }
+    // hidden here rather than in CSS, so that with no JS or under reduced motion the mark
+    // is simply present instead of never arriving
+    gsap.set('.hero-wm', { opacity: 0, scale: 1.14 });
 
     // intro timeline (hero owns its own reveals)
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.to('.hero-eyebrow', { opacity: 1, y: 0, duration: .7 })
-      .to('.hero-logo', { opacity: 1, y: 0, duration: .8 }, '-=.4')
-      .to('.hero-brand .char', { yPercent: 0, opacity: 1, stagger: .05, duration: .85, ease: 'power4.out' }, '-=.4')
+      // the field settles first and slowest — it is the room the wordmark arrives into
+      .to('.hero-wm', { opacity: 1, scale: 1, duration: 1.6, ease: 'power2.out' }, 0)
+      .to('.hero-brand .char', { yPercent: 0, opacity: 1, stagger: .05, duration: .85, ease: 'power4.out' }, '-=1.2')
       .to('.hero-tagline', { opacity: 1, y: 0, duration: .8, ease: 'power4.out' }, '-=.4')
       .to('.hero-sub', { opacity: 1, y: 0, duration: .7 }, '-=.5')
       .to('.hero-btns', { opacity: 1, y: 0, duration: .6 }, '-=.45')
@@ -251,6 +255,10 @@
 
     // hero parallax
     gsap.to('.hero-inner', { yPercent: 12, opacity: .35, ease: 'none',
+      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    // the mark drifts against the content at roughly a third of its rate, which is what
+    // gives the hero depth rather than a flat layer that scrolls away with everything else
+    gsap.to('.hero-wm', { yPercent: -4, scale: 1.06, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
     // process timeline progress + active steps
