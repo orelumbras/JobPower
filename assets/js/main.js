@@ -251,6 +251,9 @@
         trigger: step, start: 'top 64%',
         onEnter: () => step.classList.add('on'),
         onEnterBack: () => step.classList.add('on'),
+        // without this the numbered nodes latch on permanently: scrolling back up left
+        // every step lit, so the timeline read as finished before you reached it
+        onLeaveBack: () => step.classList.remove('on'),
       }));
     }
 
@@ -260,84 +263,132 @@
   }
 
   /* ===============================================================
-     6b. THE MATCH — pinned counter-travel
-     Scroll drives two streams past each other in opposite directions. Whichever pair is
-     crossing the centre seam locks. Distances are read inside function-based values so
-     invalidateOnRefresh re-measures them on resize instead of caching a stale width.
+     6b. THE MATCH — two streams that never stop
+     The rails drift on their own and scrolling accelerates them; whichever pair is
+     crossing the centre seam locks.
+
+     This replaces a scrub-driven version that mapped scroll position onto
+     `trackWidth - railWidth`. That distance collapses to zero the moment the viewport is
+     wider than the track — eight chips is about 1950px, so on any monitor near or above
+     1920 the section simply sat still. Looping the content instead removes the viewport
+     from the maths entirely: the track is duplicated until it is comfortably wider than
+     the rail at any width, and position wraps on one set's width, which is seamless
+     because the content repeats exactly.
      =============================================================== */
   function initMatchRails() {
-    const stage = doc.querySelector('.match-stage');
+    const section = doc.querySelector('.match');
     const people = doc.getElementById('railPeople');
     const roles = doc.getElementById('railRoles');
     const line = doc.querySelector('.match-line');
-    if (!stage || !people || !roles) return;
+    if (!section || !people || !roles) return;
 
-    // how far each track has to travel for its whole length to pass the window
-    const travel = (track) => Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
-
-    /* Two thresholds on purpose. The chip nearest the seam always highlights, so the
-       visitor can see which one is "in the window" — but the seam itself only ignites
-       when both sides are genuinely aligned. A single loose threshold left it lit for
-       the entire scroll, which makes the lock mean nothing; a tight one gives the
-       section its rhythm: pairs snap together and release as you drag them past. */
+    const BASE = 22;    // px/sec of drift with the page standing still
+    const BOOST = 0.32; // how much scroll velocity adds on top
+    const CAP = 1100;   // px/sec ceiling, so a flick cannot turn it into a blur
     const NEAR = 0.5;   // highlight the chip in the window
-    const LOCK = 0.22;  // ignite the seam: an actual alignment
+    /* The seam is lit for roughly 2x this fraction of every chip of travel, so it doubles
+       as the duty cycle of the pulse. At 0.22 it was lit about two thirds of the time,
+       which reads as "always on"; this gives a distinct click each time a pair meets. */
+    const LOCK = 0.10;
 
-    const markRail = (track) => {
-      const rail = track.parentElement.getBoundingClientRect();
-      const mid = rail.left + rail.width / 2;
-      let best = null, bestD = Infinity, bestW = 1;
-      for (const chip of track.children) {
-        const b = chip.getBoundingClientRect();
-        const d = Math.abs(b.left + b.width / 2 - mid);
-        if (d < bestD) { bestD = d; best = chip; bestW = b.width || 1; }
-        chip.classList.remove('is-matched');
+    /* Repeat the chips until the track spans the rail twice over, so there is always
+       content either side of the wrap point. Clones are aria-hidden: they are the same
+       items again, and a screen reader should hear the list once. */
+    const fill = (track) => {
+      const originals = [...track.children];
+      const setW = () => originals.reduce((a, n) => a + n.offsetWidth, 0);
+      const one = setW();
+      if (!one) return 0;
+      let guard = 0;
+      while (track.scrollWidth < track.parentElement.clientWidth * 2 + one && guard++ < 12) {
+        originals.forEach((n) => {
+          const c = n.cloneNode(true);
+          c.setAttribute('aria-hidden', 'true');
+          track.appendChild(c);
+        });
       }
+      return one;
+    };
+
+    /* Both rails run at the same speed in opposite directions, so a pair lands on the
+       seam together only when the rail is a whole number of chips wide — otherwise the
+       two streams are permanently out of phase and the lock can never fire. Rounding the
+       chip width to an exact divisor of the rail makes the meeting structural instead of
+       a coincidence of viewport size. */
+    const sizeChips = () => {
+      section.style.removeProperty('--chip-w');   // read the width the CSS intends first
+      section.style.removeProperty('--chip-min');
+      const rail = people.parentElement;
+      const railW = rail.clientWidth;
+      const natural = people.children[0] ? people.children[0].offsetWidth : 0;
+      if (!railW || !natural) return;
+      const n = Math.max(2, Math.round(railW / natural));
+      section.style.setProperty('--chip-min', '0px');
+      section.style.setProperty('--chip-w', (railW / n) + 'px');
+    };
+
+    // cached geometry: offsets are stable after layout, so the per-frame lock test needs
+    // no getBoundingClientRect at all
+    let setPeople = 0, setRoles = 0, geo = new Map();
+    const measure = () => {
+      sizeChips();
+      setPeople = fill(people);
+      setRoles = fill(roles);
+      geo = new Map();
+      [people, roles].forEach((track) => {
+        geo.set(track, [...track.children].map((c) => ({ el: c, mid: c.offsetLeft + c.offsetWidth / 2, w: c.offsetWidth || 1 })));
+      });
+    };
+    measure();
+    if (!setPeople || !setRoles) return;
+
+    let pos = 0, boost = 0, active = false;
+
+    const markRail = (track, x) => {
+      const items = geo.get(track) || [];
+      const mid = track.parentElement.clientWidth / 2;
+      let best = null, bestD = Infinity, bestW = 1;
+      for (const it of items) {
+        const d = Math.abs(it.mid + x - mid);
+        if (d < bestD) { bestD = d; best = it; bestW = it.w; }
+      }
+      items.forEach((it) => it.el.classList.remove('is-matched'));
       if (!best) return 1;
       const ratio = bestD / bestW;
-      if (ratio < NEAR) best.classList.add('is-matched');
+      if (ratio < NEAR) best.el.classList.add('is-matched');
       return ratio;
     };
 
-    const sync = () => {
-      const a = markRail(people);
-      const b = markRail(roles);
-      if (line) line.classList.toggle('is-locked', a < LOCK && b < LOCK);
+    const render = () => {
+      const a = -(pos % setPeople);                 // travels one way
+      const b = -(setRoles - (pos % setRoles));     // and the other, wrapping identically
+      gsap.set(people, { x: a });
+      gsap.set(roles, { x: b });
+      const ra = markRail(people, a);
+      const rb = markRail(roles, b);
+      if (line) line.classList.toggle('is-locked', ra < LOCK && rb < LOCK);
     };
 
-    // scrub short: the lock has to read as caused by the scroll, and a long lag decouples
-    // the ignition from the gesture that produced it
-    const build = (cfg) => gsap.timeline({
-      scrollTrigger: Object.assign({
-        trigger: '.match',
-        scrub: 0.3,
-        invalidateOnRefresh: true,
-        onUpdate: sync,
-        onRefresh: sync,
-      }, cfg),
-    })
-      .fromTo(people, { x: 0 }, { x: () => -travel(people), ease: 'none' }, 0)
-      .fromTo(roles, { x: () => -travel(roles) }, { x: 0, ease: 'none' }, 0);
+    gsap.ticker.add((_t, deltaMs) => {
+      if (!active) return;                          // nothing to do while off-screen
+      const dt = Math.min(deltaMs, 50) / 1000;      // clamp: a stalled tab must not jump
+      pos += (BASE + boost) * dt;
+      boost *= 0.92;                                // ease back down to the resting drift
+      render();
+    });
 
-    /* matchMedia, so the two setups swap cleanly on resize/rotate instead of caching
-       whichever one happened to be true at load. */
-    gsap.matchMedia()
-      /* Pointer + room: pin the stage and hand the whole gesture over to the mechanic. */
-      .add('(min-width: 721px) and (hover: hover)', () => {
-        build({
-          start: 'top top',
-          end: () => '+=' + Math.max(travel(people), travel(roles), window.innerHeight * 0.9),
-          pin: stage,
-        });
-      })
-      /* Touch or narrow: same counter-travel, no pin. Pinning here would freeze the page
-         for well over a screen of scrolling, and a pinned stage stacked on the fixed
-         video background is the combination that goes wrong on iOS. Letting the rails
-         run as the section crosses the viewport keeps the idea and the scroll stays the
-         visitor's. */
-      .add('(max-width: 720px), (hover: none)', () => {
-        build({ start: 'top bottom', end: 'bottom top' });
-      });
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      onToggle: (self) => { active = self.isActive; },
+      // magnitude, not direction: scrolling either way speeds the streams up rather than
+      // reversing them, so the drift always reads as the page's own pulse
+      onUpdate: (self) => { boost = Math.min(Math.abs(self.getVelocity()) * BOOST, CAP); },
+    });
+
+    ScrollTrigger.addEventListener('refreshInit', measure);
+    render();
   }
 
   /* ===============================================================

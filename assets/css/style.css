@@ -148,19 +148,73 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 /* ====================================================================
    BUTTONS
    ==================================================================== */
+/* Liquid Glass.
+   Not a translucent rectangle: what makes glass read as glass is the RIM. Light enters
+   along the top edge as a bright specular line, the body carries a soft lens highlight
+   pulled from above, and the bottom edge goes dark where the light leaves. The blur
+   behind it lifts and saturates whatever is passing underneath — here, the video — so
+   the button samples the page instead of covering it.
+
+   Capsule radius is part of the material, not a style preference: a 2px corner has no
+   thickness to bend light through, and the bevel collapses into a hairline. This is the
+   one place the site's near-square language gives way, and only for controls.
+
+   --btn-tint is the per-variant colour, kept translucent so the material stays glass;
+   --btn-solid is the same variant's opaque stand-in for the accessibility fallbacks. */
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
-  padding:.92rem 1.9rem;border-radius:2px;font-family:var(--font-he);font-weight:600;font-size:1rem;
-  cursor:pointer;border:1px solid transparent;overflow:hidden;will-change:transform;
-  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s,background .3s,color .3s}
-.btn-primary{color:#fff;background:var(--v2);box-shadow:0 14px 34px -14px rgba(124,92,224,.9)}
-.btn-primary:hover{background:var(--v3);box-shadow:0 20px 44px -14px rgba(124,92,224,1)}
-.btn-ghost{color:var(--text);background:rgba(255,255,255,.04);border-color:var(--line-2)}
-.btn-ghost:hover{border-color:var(--v3);background:rgba(139,92,246,.12)}
-.btn-line{color:var(--text-soft);border-color:var(--line-2);background:transparent}
-.btn-line:hover{color:#fff;border-color:var(--v4)}
-.btn-wa{color:#fff;background:linear-gradient(135deg,#1faa53,#25d366);box-shadow:0 14px 32px -14px rgba(37,211,102,.7)}
-.btn-wa:hover{box-shadow:0 20px 44px -14px rgba(37,211,102,.85)}
+  padding:.92rem 1.9rem;border-radius:999px;font-family:var(--font-he);font-weight:600;font-size:1rem;
+  cursor:pointer;border:0;overflow:hidden;will-change:transform;color:#fff;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,.06) 40%,rgba(255,255,255,0) 62%),
+    radial-gradient(130% 150% at 50% -40%,rgba(255,255,255,.20),rgba(255,255,255,0) 58%),
+    var(--btn-tint,rgba(255,255,255,.10)),
+    /* dimming floor under the tint. The clearer variants are nearly transparent, and the
+       video behind them is not guaranteed to stay dark — without this, white label text
+       rides whatever frame happens to be playing. */
+    rgba(6,5,13,.34);
+  -webkit-backdrop-filter:blur(16px) saturate(180%);
+          backdrop-filter:blur(16px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),          /* specular: light entering the rim */
+    inset 0 -1px 0 rgba(0,0,0,.30),               /* the far edge, where it leaves */
+    inset 0 0 0 1px rgba(255,255,255,.14),        /* keeps the shape on any backdrop */
+    0 10px 28px -12px rgba(0,0,0,.7);             /* lift */
+  transition:transform .32s var(--ease),box-shadow .32s var(--ease),background .32s var(--ease)}
+/* presses gel rather than click: the glass gives, then comes back */
+.btn:hover{transform:translateY(-2px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -1px 0 rgba(0,0,0,.3),
+    inset 0 0 0 1px rgba(255,255,255,.2),0 18px 40px -14px rgba(0,0,0,.8)}
+.btn:active{transform:translateY(0) scale(.972);transition-duration:.12s}
+
+.btn-primary{--btn-tint:rgba(124,92,224,.55);--btn-solid:var(--v2)}
+.btn-primary:hover{--btn-tint:rgba(139,92,246,.68)}
+.btn-ghost{--btn-tint:rgba(255,255,255,.09);--btn-solid:#241f36}
+.btn-ghost:hover{--btn-tint:rgba(139,92,246,.24)}
+.btn-line{--btn-tint:rgba(255,255,255,.05);--btn-solid:#1a1726}
+.btn-line:hover{--btn-tint:rgba(167,139,250,.20)}
+.btn-wa{--btn-tint:rgba(37,211,102,.44);--btn-solid:#1faa53}
+.btn-wa:hover{--btn-tint:rgba(37,211,102,.58)}
 .btn-lg{padding:1.1rem 2.4rem;font-size:1.05rem}
+
+/* the nav CTA is the same control at a smaller size */
+.nav-cta{border-radius:999px}
+
+/* No backdrop-filter support: drop to the opaque variant colour rather than leaving a
+   near-transparent button floating over video. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .btn{background:var(--btn-solid,#241f36)}
+}
+/* Reduce Transparency / Increase Contrast: the material is the first thing to go. Same
+   shape, same colour, no sampling of what is behind it. */
+@media (prefers-reduced-transparency:reduce),(prefers-contrast:more){
+  .btn{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--btn-solid,#241f36);
+    box-shadow:0 10px 28px -12px rgba(0,0,0,.7);outline:1px solid rgba(255,255,255,.5);outline-offset:-1px}
+  .btn:hover{box-shadow:0 18px 40px -14px rgba(0,0,0,.8)}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn{transition:background .2s linear,box-shadow .2s linear}
+  .btn:hover,.btn:active{transform:none}
+}
 
 /* ====================================================================
    HERO
@@ -277,8 +331,14 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .rail--roles{border-top:0}
 .rail-track{display:flex;width:max-content;gap:0;will-change:transform}
 
+/* --chip-w is written by the script: a width that divides the rail an exact whole number
+   of times. Both rails move at the same speed in opposite directions, so a pair can only
+   meet on the centre seam when railWidth/chipWidth is an integer — at 1920px the natural
+   width gave 7.83 and the two streams never aligned at all. The clamp stays as the value
+   the script starts from, and as the no-JS fallback. */
 .chip{direction:rtl;flex:none;display:flex;flex-direction:column;gap:.2rem;justify-content:center;
-  min-width:clamp(178px,21vw,244px);padding:clamp(1rem,2vh,1.5rem) clamp(1.1rem,2vw,1.8rem);
+  min-width:var(--chip-min,clamp(178px,21vw,244px));width:var(--chip-w,auto);
+  padding:clamp(1rem,2vh,1.5rem) clamp(1.1rem,2vw,1.8rem);
   border-inline-start:1px solid var(--line);background:var(--glass);
   transition:background .45s var(--ease),border-color .45s var(--ease)}
 .chip b{font-weight:700;font-size:clamp(.98rem,1.5vw,1.16rem);color:var(--text-soft);
@@ -291,7 +351,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .chip.is-matched i{color:var(--v4)}
 
 .match-line{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
-  width:clamp(178px,21vw,244px);pointer-events:none;display:flex;align-items:center;justify-content:center}
+  width:var(--chip-w,clamp(178px,21vw,244px));pointer-events:none;display:flex;align-items:center;justify-content:center}
 .match-seam{position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--v3);
   opacity:.28;transition:opacity .45s var(--ease),box-shadow .45s var(--ease)}
 .match-line.is-locked .match-seam{opacity:1;box-shadow:0 0 22px 1px rgba(139,92,246,.75)}
@@ -304,8 +364,8 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .match-foot span{font-family:var(--font-lat);font-weight:600;color:var(--v4);font-size:1rem}
 
 @media (max-width:720px){
-  .chip{min-width:clamp(148px,52vw,190px)}
-  .match-line{width:clamp(148px,52vw,190px)}
+  .chip{min-width:var(--chip-min,clamp(148px,52vw,190px))}
+  .match-line{width:var(--chip-w,clamp(148px,52vw,190px))}
 }
 
 /* No pin, no scrub: the rails stop being a mechanic and become two plain, readable
@@ -417,7 +477,12 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
 /* ====================================================================
    TO-TOP
    ==================================================================== */
-.totop{position:fixed;bottom:24px;inset-inline-end:24px;z-index:700;width:46px;height:46px;
+/* Stacked above the review bubble, not opposite it. `inset-inline-end` resolves to the
+   PHYSICAL left in this RTL document, which is exactly where the accessibility widget
+   plants its own fixed button — and that button carries z-index 99990, so the back-to-top
+   arrow was being buried under it the moment it appeared. Keeping both of the site's own
+   floating controls on one side leaves the accessibility widget its corner. */
+.totop{position:fixed;bottom:88px;inset-inline-start:24px;z-index:700;width:46px;height:46px;
   display:grid;place-items:center;font-size:1.1rem;color:var(--text);
   background:var(--glass-2);border:1px solid var(--line-2);backdrop-filter:blur(10px);
   opacity:0;visibility:hidden;transform:translateY(12px);transition:.4s var(--ease)}
