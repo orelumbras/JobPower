@@ -36,8 +36,20 @@
     const ready = () => { v.classList.add('ready'); v.play().catch(() => {}); };
 
     if (v.canPlayType('application/vnd.apple.mpegurl')) {
-      v.src = VIDEO_SRC;                        // Safari / iOS native HLS
-      v.addEventListener('loadeddata', ready, { once: true });
+      /* Native HLS (Safari / iOS). The reveal used to hang off `loadeddata` alone, and
+         that is the event iOS is least likely to reach: with autoplay refused — Low Power
+         Mode, Low Data Mode — it never buffers a frame, so the video stayed at opacity 0
+         indefinitely. Desktop looked fine because the hls.js path reveals on
+         MANIFEST_PARSED, which fires whether or not playback is allowed. Reveal on the
+         earliest event that means "there is a picture", and retry playback on the first
+         touch, which is a gesture iOS will accept. */
+      v.src = VIDEO_SRC;
+      ['loadedmetadata', 'loadeddata', 'canplay'].forEach((ev) =>
+        v.addEventListener(ev, ready, { once: true }));
+      v.load();
+      const unlock = () => v.play().catch(() => {});
+      ['touchstart', 'click'].forEach((ev) =>
+        doc.addEventListener(ev, unlock, { once: true, passive: true }));
     } else {
       // idle, so the fetch lands after the page has painted and settled
       const start = () => loadHls().then(() => {
