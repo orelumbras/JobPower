@@ -208,30 +208,16 @@
     }
     gsap.registerPlugin(ScrollTrigger);
 
-    // split the Hebrew wordmark into chars (solid colour)
-    const brand = doc.querySelector('.hero-brand .split');
-    if (brand) {
-      const txt = brand.textContent; brand.innerHTML = '';
-      [...txt].forEach(ch => {
-        const s = doc.createElement('span'); s.className = 'char';
-        s.textContent = ch === ' ' ? ' ' : ch; brand.appendChild(s);
-      });
-      gsap.set('.hero-brand .char', { yPercent: 120, opacity: 0 });
-    }
-    // hidden here rather than in CSS, so that with no JS or under reduced motion the mark
-    // is simply present instead of never arriving
-    gsap.set('.hero-figure', { opacity: 0, scale: .88 });
-
-    // intro timeline (hero owns its own reveals)
+    /* The split is the hero now, so the intro introduces the choice: the title, then
+       each panel's copy, the seekers' side first because it is the reading side. Hidden
+       here rather than in CSS so that with no JS, or under reduced motion, the panels are
+       simply present instead of never arriving. */
+    gsap.set('.hero-title, .sh-body, .hero-scroll', { opacity: 0, y: 18 });
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.to('.hero-eyebrow', { opacity: 1, y: 0, duration: .7 })
-      // the field settles first and slowest — it is the room the wordmark arrives into
-      .to('.hero-figure', { opacity: 1, scale: 1, duration: 1.1, ease: 'power3.out' }, .15)
-      .to('.hero-brand .char', { yPercent: 0, opacity: 1, stagger: .05, duration: .85, ease: 'power4.out' }, '-=1.2')
-      .to('.hero-tagline', { opacity: 1, y: 0, duration: .8, ease: 'power4.out' }, '-=.4')
-      .to('.hero-sub', { opacity: 1, y: 0, duration: .7 }, '-=.5')
-      .to('.hero-btns', { opacity: 1, y: 0, duration: .6 }, '-=.45')
-      .from('.hero-strip', { opacity: 0, y: 14, duration: .7 }, '-=.3');
+    tl.to('.hero-title', { opacity: 1, y: 0, duration: .7 })
+      .to('.sh--seek .sh-body', { opacity: 1, y: 0, duration: .8 }, '-=.35')
+      .to('.sh--hire .sh-body', { opacity: 1, y: 0, duration: .8 }, '-=.62')
+      .to('.hero-scroll', { opacity: 1, y: 0, duration: .6 }, '-=.4');
 
     // generic reveals (everything outside the hero)
     gsap.utils.toArray('[data-reveal]').forEach(el => {
@@ -253,12 +239,8 @@
     if (bgv) gsap.to(bgv, { scale: 1.16, ease: 'none',
       scrollTrigger: { trigger: doc.body, start: 'top top', end: 'bottom bottom', scrub: true } });
 
-    // hero parallax
-    gsap.to('.hero-inner', { yPercent: 12, opacity: .35, ease: 'none',
-      scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
-    // the mark drifts against the content at roughly a third of its rate, which is what
-    // gives the hero depth rather than a flat layer that scrolls away with everything else
-    gsap.to('.hero-figure', { yPercent: -9, ease: 'none',
+    // the whole hero recedes as you leave it; there is no inner column to move now
+    gsap.to('.hero-split, .hero-title', { yPercent: 8, opacity: .3, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
     // process timeline progress + active steps
