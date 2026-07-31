@@ -247,9 +247,92 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .facts li span{font-family:var(--font-lat);font-size:.8rem;color:var(--v4)}
 
 /* ====================================================================
+   THE MATCH  —  the page's one scroll-driven set piece
+   Two streams cross in opposite directions while the stage is pinned; the pair on the
+   centre seam locks. Built entirely from language already in this file: hairline rules,
+   the marquee's edge mask, glass surfaces, the violet ramp.
+   ==================================================================== */
+.match{padding:0}
+.match-stage{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  gap:clamp(28px,5vh,54px);padding-block:clamp(60px,9vh,110px);overflow:hidden}
+.match-head{max-width:760px}
+.match-head .sub{margin-top:1rem}
+
+.match-rails{position:relative;display:flex;flex-direction:column;gap:0}
+/* the caps are the only labels here — no eyebrow, they name the two streams */
+/* --text-mute, not --text-faint: faint measures 3.4:1 on this background, which is under
+   the 4.5:1 small-text floor. Mute is 6.5:1 and already in the system. */
+.rail-cap{font-family:var(--font-lat);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text-mute);padding-inline:var(--pad);padding-block:.55rem}
+.rail-cap--roles{text-align:end}
+
+/* direction:ltr on the rail only — an RTL flex row of width:max-content overflows to the
+   LEFT, which makes the travel maths sign-dependent and brittle. Forcing the track to
+   lay out left-to-right gives the ordinary "starts at 0, overflows right" geometry. The
+   chips put themselves back into RTL so the Hebrew inside them is unaffected; the rail
+   is a conveyor of tokens, not a line of prose, so its order carries no reading meaning. */
+.rail{position:relative;direction:ltr;border-block:1px solid var(--line);overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
+.rail--roles{border-top:0}
+.rail-track{display:flex;width:max-content;gap:0;will-change:transform}
+
+.chip{direction:rtl;flex:none;display:flex;flex-direction:column;gap:.2rem;justify-content:center;
+  min-width:clamp(178px,21vw,244px);padding:clamp(1rem,2vh,1.5rem) clamp(1.1rem,2vw,1.8rem);
+  border-inline-start:1px solid var(--line);background:var(--glass);
+  transition:background .45s var(--ease),border-color .45s var(--ease)}
+.chip b{font-weight:700;font-size:clamp(.98rem,1.5vw,1.16rem);color:var(--text-soft);
+  white-space:nowrap;transition:color .45s var(--ease)}
+.chip i{font-style:normal;font-family:var(--font-lat);font-size:.76rem;letter-spacing:.04em;
+  color:var(--text-mute);white-space:nowrap;transition:color .45s var(--ease)}
+/* the pair currently crossing the seam */
+.chip.is-matched{background:var(--glass-2);border-color:var(--line-v)}
+.chip.is-matched b{color:#fff}
+.chip.is-matched i{color:var(--v4)}
+
+.match-line{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
+  width:clamp(178px,21vw,244px);pointer-events:none;display:flex;align-items:center;justify-content:center}
+.match-seam{position:absolute;top:0;bottom:0;left:50%;width:1px;background:var(--v3);
+  opacity:.28;transition:opacity .45s var(--ease),box-shadow .45s var(--ease)}
+.match-line.is-locked .match-seam{opacity:1;box-shadow:0 0 22px 1px rgba(139,92,246,.75)}
+.match-badge{position:relative;font-family:var(--font-he);font-weight:700;font-size:.78rem;
+  letter-spacing:.06em;color:var(--text-mute);background:var(--bg);padding:.34rem .8rem;
+  border:1px solid var(--line);transition:color .45s var(--ease),border-color .45s var(--ease)}
+.match-line.is-locked .match-badge{color:#fff;border-color:var(--v3)}
+
+.match-foot{padding-inline:var(--pad);color:var(--text-mute);font-size:.86rem}
+.match-foot span{font-family:var(--font-lat);font-weight:600;color:var(--v4);font-size:1rem}
+
+@media (max-width:720px){
+  .chip{min-width:clamp(148px,52vw,190px)}
+  .match-line{width:clamp(148px,52vw,190px)}
+}
+
+/* No pin, no scrub: the rails stop being a mechanic and become two plain, readable
+   rows that the visitor can still swipe through themselves. */
+@media (prefers-reduced-motion:reduce){
+  .match-stage{min-height:0}
+  .rail{overflow-x:auto;-webkit-mask-image:none;mask-image:none;scrollbar-width:none}
+  .rail::-webkit-scrollbar{display:none}
+  .match-line{display:none}
+}
+
+/* ====================================================================
    SERVICES
    ==================================================================== */
-.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--line);background:var(--line)}
+/* Six equal tiles in a 3x2 was the flattest possible reading of six fields: nothing was
+   more important than anything else and the eye had nowhere to land. Spanning them on a
+   6-column grid gives three rows with three different rhythms, using the same hairline
+   seam construction as the rest of the page — composition, not ornament. */
+.svc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;border:1px solid var(--line);background:var(--line)}
+.svc:nth-child(1){grid-column:span 4}
+.svc:nth-child(2){grid-column:span 2}
+.svc:nth-child(3){grid-column:span 2}
+.svc:nth-child(4){grid-column:span 4}
+.svc:nth-child(5){grid-column:span 3}
+.svc:nth-child(6){grid-column:span 3}
+/* the wide cells get the type scale their span earns */
+.svc:nth-child(1) h3,.svc:nth-child(4) h3{font-size:clamp(1.5rem,2.4vw,1.95rem)}
 .svc{position:relative;padding:2.4rem 2rem 2.2rem;background:var(--glass);backdrop-filter:blur(5px);overflow:hidden;
   transition:background .4s var(--ease)}
 .svc::before{content:'';position:absolute;top:0;inset-inline:0;height:2px;background:var(--grad);
@@ -443,6 +526,8 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
   .nav-burger{display:block}
   .about-cols{grid-template-columns:1fr;gap:1.4rem}
   .svc-grid,.why-grid{grid-template-columns:repeat(2,1fr)}
+  /* drop the spans with the 6-col track, or every cell overflows the 2-col grid */
+  .svc-grid>.svc{grid-column:auto}
   .stats,.hours{grid-template-columns:repeat(2,1fr)}
 }
 @media (max-width:600px){

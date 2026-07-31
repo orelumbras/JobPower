@@ -254,7 +254,90 @@
       }));
     }
 
+    initMatchRails();
+
     ScrollTrigger.refresh();
+  }
+
+  /* ===============================================================
+     6b. THE MATCH — pinned counter-travel
+     Scroll drives two streams past each other in opposite directions. Whichever pair is
+     crossing the centre seam locks. Distances are read inside function-based values so
+     invalidateOnRefresh re-measures them on resize instead of caching a stale width.
+     =============================================================== */
+  function initMatchRails() {
+    const stage = doc.querySelector('.match-stage');
+    const people = doc.getElementById('railPeople');
+    const roles = doc.getElementById('railRoles');
+    const line = doc.querySelector('.match-line');
+    if (!stage || !people || !roles) return;
+
+    // how far each track has to travel for its whole length to pass the window
+    const travel = (track) => Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+
+    /* Two thresholds on purpose. The chip nearest the seam always highlights, so the
+       visitor can see which one is "in the window" — but the seam itself only ignites
+       when both sides are genuinely aligned. A single loose threshold left it lit for
+       the entire scroll, which makes the lock mean nothing; a tight one gives the
+       section its rhythm: pairs snap together and release as you drag them past. */
+    const NEAR = 0.5;   // highlight the chip in the window
+    const LOCK = 0.22;  // ignite the seam: an actual alignment
+
+    const markRail = (track) => {
+      const rail = track.parentElement.getBoundingClientRect();
+      const mid = rail.left + rail.width / 2;
+      let best = null, bestD = Infinity, bestW = 1;
+      for (const chip of track.children) {
+        const b = chip.getBoundingClientRect();
+        const d = Math.abs(b.left + b.width / 2 - mid);
+        if (d < bestD) { bestD = d; best = chip; bestW = b.width || 1; }
+        chip.classList.remove('is-matched');
+      }
+      if (!best) return 1;
+      const ratio = bestD / bestW;
+      if (ratio < NEAR) best.classList.add('is-matched');
+      return ratio;
+    };
+
+    const sync = () => {
+      const a = markRail(people);
+      const b = markRail(roles);
+      if (line) line.classList.toggle('is-locked', a < LOCK && b < LOCK);
+    };
+
+    // scrub short: the lock has to read as caused by the scroll, and a long lag decouples
+    // the ignition from the gesture that produced it
+    const build = (cfg) => gsap.timeline({
+      scrollTrigger: Object.assign({
+        trigger: '.match',
+        scrub: 0.3,
+        invalidateOnRefresh: true,
+        onUpdate: sync,
+        onRefresh: sync,
+      }, cfg),
+    })
+      .fromTo(people, { x: 0 }, { x: () => -travel(people), ease: 'none' }, 0)
+      .fromTo(roles, { x: () => -travel(roles) }, { x: 0, ease: 'none' }, 0);
+
+    /* matchMedia, so the two setups swap cleanly on resize/rotate instead of caching
+       whichever one happened to be true at load. */
+    gsap.matchMedia()
+      /* Pointer + room: pin the stage and hand the whole gesture over to the mechanic. */
+      .add('(min-width: 721px) and (hover: hover)', () => {
+        build({
+          start: 'top top',
+          end: () => '+=' + Math.max(travel(people), travel(roles), window.innerHeight * 0.9),
+          pin: stage,
+        });
+      })
+      /* Touch or narrow: same counter-travel, no pin. Pinning here would freeze the page
+         for well over a screen of scrolling, and a pinned stage stacked on the fixed
+         video background is the combination that goes wrong on iOS. Letting the rails
+         run as the section crosses the viewport keeps the idea and the scroll stays the
+         visitor's. */
+      .add('(max-width: 720px), (hover: none)', () => {
+        build({ start: 'top bottom', end: 'bottom top' });
+      });
   }
 
   /* ===============================================================

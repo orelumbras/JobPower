@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=2">
+<link rel="stylesheet" href="assets/css/style.css?v=4">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -118,7 +118,6 @@
 <section class="sec" id="about">
   <div class="container">
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">01</span><span class="k-rule"></span><span>מי אנחנו</span></div>
       <h2 class="title" data-reveal="mask">מחברים בין אנשים<br>ל<em>הזדמנויות</em> הנכונות</h2>
     </header>
 
@@ -139,11 +138,65 @@
   </div>
 </section>
 
+<!-- ===== THE MATCH =====
+     The signature scroll moment. Two streams travel in opposite directions while the
+     section is pinned, and scrolling is what drags them past each other; whichever pair
+     is crossing the centre line locks together and lights the seam. It is the company's
+     actual job expressed as a mechanic, and it extends the counter-scrolling column
+     motif the testimonial wall already uses. Falls back to two static, readable lists
+     under reduced motion (see the CSS). -->
+<section class="sec match" id="match" aria-labelledby="matchTitle">
+  <div class="match-stage">
+    <div class="container match-head">
+      <h2 class="title" id="matchTitle" data-reveal="mask">שני צדדים.<br>התאמה <em>אחת</em>.</h2>
+      <p class="sub" data-reveal="rise">בכל יום עוברים דרכנו מועמדים ומשרות. כל העבודה שלנו היא הרגע המדויק שבו השניים נפגשים.</p>
+    </div>
+
+    <div class="match-rails">
+      <p class="rail-cap rail-cap--people">מועמדים</p>
+
+      <div class="rail rail--people">
+        <div class="rail-track" id="railPeople">
+          <span class="chip"><b>מהנדס תוכנה</b><i>7 שנות ניסיון</i></span>
+          <span class="chip"><b>מנהלת חשבונות</b><i>סוג 3</i></span>
+          <span class="chip"><b>טכנאי אחזקה</b><i>מוסמך</i></span>
+          <span class="chip"><b>רכזת גיוס</b><i>אקדמאית</i></span>
+          <span class="chip"><b>בודק QA</b><i>אוטומציה</i></span>
+          <span class="chip"><b>חשמלאי מוסמך</b><i>רישיון הנדסאי</i></span>
+          <span class="chip"><b>מזכירה רפואית</b><i>דוברת 3 שפות</i></span>
+          <span class="chip"><b>מנהל משמרת</b><i>ניהול 20 עובדים</i></span>
+        </div>
+      </div>
+
+      <div class="match-line" aria-hidden="true">
+        <span class="match-seam"></span>
+        <span class="match-badge">התאמה</span>
+      </div>
+
+      <div class="rail rail--roles">
+        <div class="rail-track" id="railRoles">
+          <span class="chip"><b>מפעל תעשייה</b><i>חדרה</i></span>
+          <span class="chip"><b>משרד רו״ח</b><i>פרדס חנה</i></span>
+          <span class="chip"><b>מרכז לוגיסטי</b><i>קיסריה</i></span>
+          <span class="chip"><b>חברת סטארטאפ</b><i>הרצליה</i></span>
+          <span class="chip"><b>בית מלון</b><i>נתניה</i></span>
+          <span class="chip"><b>חברת הובלות</b><i>עמק חפר</i></span>
+          <span class="chip"><b>מרפאה פרטית</b><i>חדרה</i></span>
+          <span class="chip"><b>מפעל מזון</b><i>עמק חפר</i></span>
+        </div>
+      </div>
+
+      <p class="rail-cap rail-cap--roles">משרות פתוחות</p>
+    </div>
+
+    <p class="match-foot">המאגר מתעדכן מדי יום — משני הכיוונים</p>
+  </div>
+</section>
+
 <!-- ===== SERVICES ===== -->
 <section class="sec" id="services">
   <div class="container">
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">02</span><span class="k-rule"></span><span>תחומי שירות</span></div>
       <h2 class="title" data-reveal="mask">השמה לכל תחום מקצועי</h2>
       <p class="sub" data-reveal="rise">פתרונות גיוס מקצועיים בשישה תחומים — מינימום זמן תגובה, מקסימום יעילות.</p>
     </header>
@@ -254,7 +307,6 @@
 <section class="sec" id="why">
   <div class="container">
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">04</span><span class="k-rule"></span><span>למה לבחור בנו</span></div>
       <h2 class="title" data-reveal="mask">היתרון של Job Power</h2>
     </header>
 
@@ -288,7 +340,6 @@
     </symbol></svg>
 
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">05</span><span class="k-rule"></span><span>ממליצים עלינו</span></div>
       <h2 class="title big" data-reveal="mask">מה הלקוחות שלנו <em>אומרים</em></h2>
       <p class="sub" data-reveal="rise">חמישה כוכבים ומילים מהלב — ממי שכבר מצא את מקומו, או את העובדים שלו, דרך Job Power.</p>
     </header>
@@ -380,7 +431,6 @@
 <section class="sec contact" id="contact">
   <div class="container">
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">06</span><span class="k-rule"></span><span>יצירת קשר</span></div>
       <h2 class="title big" data-reveal="mask">בואו נמצא לכם<br>את <em>האנשים הנכונים</em></h2>
       <p class="sub" data-reveal="rise">מחפשים עבודה? צריכים לגייס? אנחנו כאן — דברו איתנו עוד היום.</p>
     </header>
@@ -457,6 +507,6 @@
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
 <script defer src="assets/js/a11y.js"></script>
-<script defer src="assets/js/main.js?v=3"></script>
+<script defer src="assets/js/main.js?v=7"></script>
 </body>
 </html>
