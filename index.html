@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=23">
+<link rel="stylesheet" href="assets/css/style.css?v=25">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -84,16 +84,22 @@
      drift apart. Each field is one link, so on touch the whole panel is the target. -->
 <header class="hero" id="top">
   <div class="hero-split">
-    <!-- centre: the brand. Leads to the section that argues the case for it. -->
-    <a class="sh sh--brand" href="#why">
-      <span class="sh-glow" aria-hidden="true"></span>
-      <h1 class="hero-title">
+    <!-- The brand sits above the panels rather than inside one, so the cuts can move
+         underneath it without ever touching it: it stays the same size, in the same
+         place, whatever the two sides are doing. Its own halo is what keeps it reading
+         as the brand even when an expanded panel has slid under it. -->
+    <h1 class="hero-title">
+      <a class="ht-link" href="#why">
+        <span class="ht-halo" aria-hidden="true"></span>
         <span class="ht-mark" data-i18n="hero.mark">ג'וב פאוור</span>
         <span class="ht-rule" aria-hidden="true"></span>
         <span class="ht-sub" data-i18n="hero.sub">גיוס והשמת משאבי אנוש · חדרה · מאז 2010</span>
         <span class="ht-more" data-i18n-html="hero.more">היתרון שלנו <i aria-hidden="true">←</i></span>
-      </h1>
-    </a>
+      </a>
+    </h1>
+
+    <!-- centre: the brand's colour field. Not a link — the title above it is. -->
+    <div class="sh sh--brand"><span class="sh-glow" aria-hidden="true"></span></div>
 
     <a class="sh sh--seek" href="#contact">
       <span class="sh-glow" aria-hidden="true"></span>
@@ -531,6 +537,6 @@
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
 <script defer src="assets/js/a11y.js?v=3"></script>
-<script defer src="assets/js/main.js?v=25"></script>
+<script defer src="assets/js/main.js?v=26"></script>
 </body>
 </html>

@@ -557,13 +557,26 @@
      as they arrive rather than requiring a tap that would otherwise navigate. */
   function initBandStates() {
     if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
-    const els = doc.querySelectorAll('.svc, .wcard, .crow, .tcard');
+    const els = doc.querySelectorAll('.svc, .wcard, .crow, .tcard, .ht-link');
     if (!els.length) return;
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => e.target.classList.toggle('in-band', e.isIntersecting)),
       { rootMargin: '-38% 0px -52% 0px', threshold: 0 }
     );
     els.forEach((el) => io.observe(el));
+
+    /* The hero panels are taller than the band, so they would light on the way in and stay
+       lit for the rest of the section. Give them their own, much taller band so only the
+       one actually filling the screen is active — scrolling walks the light down the
+       three fields instead of switching it on once. */
+    const hero = doc.querySelectorAll('.hero .sh');
+    if (hero.length) {
+      const heroIo = new IntersectionObserver(
+        (entries) => entries.forEach((e) => e.target.classList.toggle('in-band', e.intersectionRatio > 0.55)),
+        { threshold: [0, 0.3, 0.55, 0.8, 1] }
+      );
+      hero.forEach((el) => heroIo.observe(el));
+    }
   }
 
   function boot() {
