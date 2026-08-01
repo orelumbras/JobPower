@@ -217,53 +217,134 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 }
 
 /* ====================================================================
-   HERO — DIAGONAL SPLIT
-   Two routes, one decision. The diagonal is the whole point: a vertical divider reads as
-   a table of two equal columns, whereas the cut commits the page to a direction and
-   gives the eye somewhere to travel. Each half is a single link, so on touch the whole
-   panel is the target; hovering one takes territory from the other.
+   HERO — THREE FIELDS, TWO CUTS
+   The brand holds the middle and the violet, and at rest it owns most of the screen. The
+   two side panels are slivers carrying only their label and headline; reach for one and
+   it throws open — copy and button unfold, the cut slides across, the violet gives way.
+   So the page says who it is first and answers "what do you need" only on demand.
 
-   The split spans the entire hero, title included. It used to be a separate band stacked
-   under the title, which meant the two coloured fields began on a hard horizontal line
-   across the page — a join nothing in the design accounted for, and the single biggest
-   reason the hero read as unfinished.
+   Four numbers describe the whole thing: --a-t / --a-b and --b-t / --b-b, where each cut
+   meets the top and bottom edges. Both cuts lean the same way and by the same amount, so
+   the centre stays a constant width and the two slivers trade width top to bottom. Every
+   panel clip, both seam lights and all the hover states derive from those four, so the
+   colour boundary and the light drawn on it cannot fall out of register.
    ==================================================================== */
 .hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1fr;
   overflow:hidden;isolation:isolate}
-
-/* The cut, as two numbers: where it meets the top edge and where it meets the bottom.
-   The panel clip, the seam light and the hover states all derive from this one pair, so
-   the edge, its glow and the colour boundary can never fall out of register. */
 .hero-split{grid-area:1/1;position:relative;display:grid;min-height:0;
-  --cut-t:61%;--cut-b:39%}
+  --a-t:80%;--a-b:72%;   /* cut A — between the centre and the seekers' side */
+  --b-t:28%;--b-b:20%}   /* cut B — between the centre and the employers' side */
 
-/* the title floats over the seam: it belongs to both sides, not to one of them */
-.hero-title{grid-area:1/1;z-index:5;align-self:start;justify-self:center;pointer-events:none;
-  display:flex;flex-direction:column;align-items:center;gap:clamp(.55rem,1.4vh,.95rem);
-  text-align:center;padding:calc(var(--nav-h) + clamp(2rem,7vh,4.2rem)) var(--pad) 0}
-.ht-mark{font-weight:900;letter-spacing:-.03em;line-height:.95;color:#fff;
-  font-size:clamp(2.5rem,7.2vw,5.2rem);text-shadow:0 14px 48px rgba(6,5,13,.55)}
+/* Reaching for a side opens it to well over half the screen and folds the violet back to
+   a strip. 26% is the floor: the wordmark at its hover scale needs that much to sit in
+   without meeting its own clip edge. */
+.hero-split:has(.sh--seek:is(:hover,:focus-visible)){--a-t:48%;--a-b:40%;--b-t:22%;--b-b:14%}
+.hero-split:has(.sh--hire:is(:hover,:focus-visible)){--a-t:86%;--a-b:78%;--b-t:60%;--b-b:52%}
+
+.sh{grid-area:1/1;position:relative;overflow:hidden;color:inherit;
+  transition:clip-path .6s var(--ease)}
+.sh-glow{position:absolute;inset:0;z-index:0;transition:opacity .55s var(--ease)}
+.sh:hover .sh-glow{opacity:1}
+
+/* ---- the three fields ----
+   All in the purple family. Fuchsia on one side, indigo on the other, the brand's violet
+   between them: far enough apart in hue to be told apart across a lit edge, close enough
+   that the hero still reads as one colour idea rather than three. Each radial is centred
+   on the cut it meets, so a panel is brightest at its border and falls away outward —
+   which is where its copy sits, so the type gains contrast as a side effect.
+
+   Every field is clipped, and the centre overruns 1px into both neighbours from
+   underneath. Leaving a field as a full rectangle puts a second translucent layer under
+   its neighbour, and wherever that rectangle's own edge falls it shows straight through
+   as a hard line of lightened colour that has nothing to do with the diagonal. */
+.sh--brand{z-index:1;
+  clip-path:polygon(calc(var(--a-t) + 1px) 0,calc(var(--a-b) + 1px) 100%,
+                    calc(var(--b-b) - 1px) 100%,calc(var(--b-t) - 1px) 0)}
+.sh--brand .sh-glow{opacity:.96;background:
+  radial-gradient(96% 62% at 50% 34%,rgba(178,148,255,.62),rgba(109,63,240,.34) 44%,transparent 76%),
+  linear-gradient(190deg,rgba(88,40,200,.6),rgba(22,10,58,.68) 76%)}
+
+/* Each sliver puts its copy at the end where it is widest — the seekers' low, because
+   their cut leans away downward, the employers' high for the same reason in reverse. The
+   panel box is the whole hero and only the clip makes it look narrow, so nothing stops
+   the copy running out under the neighbouring field; placing it in the wide end and
+   capping its width against the sliver is what keeps it inside the colour it belongs to.
+   The outer padding is tighter than --pad for the same reason: every pixel of it comes
+   straight off the usable column. */
+.sh--seek,.sh--hire{--sh-pad:clamp(16px,2.2vw,30px)}
+.sh--seek .sh-body,.sh--hire .sh-body{max-width:min(22%,28ch);
+  transition:max-width .55s var(--ease)}
+.sh--seek:is(:hover,:focus-within) .sh-body,
+.sh--hire:is(:hover,:focus-within) .sh-body{max-width:min(42%,36ch)}
+
+.sh--seek{--sh-cta:rgba(192,38,211,.62);z-index:2;
+  display:flex;justify-content:flex-start;align-items:flex-end;
+  padding:calc(var(--nav-h) + clamp(7rem,20vh,11rem)) var(--sh-pad) clamp(4.5rem,11vh,7.5rem);
+  clip-path:polygon(100% 0,100% 100%,var(--a-b) 100%,var(--a-t) 0)}
+.sh--seek .sh-glow{opacity:.94;background:
+  radial-gradient(88% 66% at 8% 50%,rgba(232,121,249,.54),rgba(146,38,158,.28) 46%,transparent 76%),
+  linear-gradient(215deg,rgba(120,28,134,.56),rgba(26,8,38,.68) 74%)}
+
+.sh--hire{--sh-cta:rgba(79,70,229,.64);z-index:2;
+  display:flex;justify-content:flex-end;align-items:flex-start;
+  padding:calc(var(--nav-h) + clamp(2.4rem,7vh,4.4rem)) var(--sh-pad) clamp(3rem,8vh,5rem);
+  clip-path:polygon(0 0,var(--b-t) 0,var(--b-b) 100%,0 100%)}
+.sh--hire .sh-glow{opacity:.94;background:
+  radial-gradient(88% 66% at 92% 50%,rgba(139,124,255,.52),rgba(60,42,175,.28) 46%,transparent 76%),
+  linear-gradient(145deg,rgba(50,32,145,.58),rgba(9,7,32,.68) 74%)}
+
+/* ---- the brand lockup ---- */
+/* Parked on the middle of the violet band rather than on the middle of the screen. The
+   panel's box is the whole hero and only the clip makes it look like a strip, so centring
+   inside the box left the wordmark sitting where the band happens to be at rest and
+   walking straight out of it the moment a hover moved the cuts. Half way between the two
+   is a number we already have.
+
+   Nowrap and out of flow on purpose: as the band narrows the lockup is allowed to overrun
+   its box, because `scale` is applied before paint and brings it back inside. Letting it
+   reflow instead would break "ג'וב פאוור" onto two lines as soon as you reached for a side. */
+.hero-title{position:absolute;z-index:2;
+  top:calc(var(--nav-h) + clamp(2rem,7vh,4.4rem));
+  left:calc((var(--b-t) + var(--a-t)) / 2);translate:-50% 0;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  gap:clamp(.5rem,1.3vh,.9rem);
+  transition:left .6s var(--ease),scale .55s var(--ease),opacity .55s var(--ease)}
+/* it recedes while you are considering one of the other two. .58 is not a taste call:
+   the centre drops to 22% of the width on hover, and anything larger runs the wordmark
+   straight into its own clip edge */
+.hero-split:has(.sh--seek:is(:hover,:focus-visible)) .hero-title,
+.hero-split:has(.sh--hire:is(:hover,:focus-visible)) .hero-title{scale:.55;opacity:.45}
+.ht-mark{font-weight:900;letter-spacing:-.03em;line-height:.95;white-space:nowrap;
+  font-size:clamp(2.5rem,7vw,5rem);
+  background:linear-gradient(140deg,#fbfaff 4%,#e2d7ff 36%,#b79bff 70%,#8b5cf6 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+  filter:drop-shadow(0 10px 34px rgba(74,32,170,.7))}
 .ht-rule{width:clamp(52px,9vw,104px);height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.62),transparent)}
+  background:linear-gradient(90deg,transparent,rgba(210,190,255,.85),transparent);
+  transition:width .45s var(--ease)}
+.sh--brand:hover .ht-rule{width:clamp(84px,14vw,156px)}
 .ht-sub{font-size:clamp(.72rem,1.4vw,.86rem);letter-spacing:.22em;font-weight:500;
-  color:rgba(245,242,255,.82);text-shadow:0 2px 18px rgba(6,5,13,.7)}
+  color:rgba(245,242,255,.84);text-shadow:0 2px 18px rgba(6,5,13,.7)}
+/* the affordance: a heading that navigates has to say so */
+.ht-more{display:inline-flex;align-items:center;gap:.45rem;margin-top:.35rem;
+  font-size:.78rem;font-weight:600;letter-spacing:.06em;color:var(--v4);
+  opacity:.78;transition:opacity .35s var(--ease),color .35s var(--ease)}
+.ht-more i{font-style:normal;transition:transform .35s var(--ease)}
+.sh--brand:hover .ht-more{opacity:1;color:var(--v5)}
+.sh--brand:hover .ht-more i{transform:translateX(-5px)}
 
-/* Both halves fill the same cell and the copy sits low, clear of the title. Only the top
-   panel is clipped — the one underneath stays a full rectangle, so no hairline of page
-   background can show through where two clip edges would otherwise meet. */
-/* the bottom padding is sized against the dissolve below, not by eye: any less and the
-   buttons sit inside the fade and lose their lower third to it */
-.sh{grid-area:1/1;position:relative;display:flex;align-items:flex-end;overflow:hidden;color:inherit;
-  padding:calc(var(--nav-h) + clamp(9rem,27vh,15rem)) var(--pad) clamp(4.5rem,11vh,7.5rem)}
+/* ---- the side panels ---- */
 .sh-body{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
-  gap:clamp(.5rem,1.3vh,.9rem);max-width:32ch}
+  gap:clamp(.5rem,1.3vh,.9rem);width:100%;max-width:34ch}
 .sh-kicker{font-family:var(--font-lat);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
-  color:#fff;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.34);border-radius:999px}
+  color:#fff;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.34);border-radius:999px;
+  white-space:nowrap}
 .sh-head{font-weight:900;line-height:1.04;letter-spacing:-.02em;color:#fff;
-  font-size:clamp(1.65rem,3.3vw,2.8rem)}
+  font-size:clamp(1.3rem,2.1vw,1.95rem);transition:font-size .5s var(--ease)}
+.sh:is(:hover,:focus-within) .sh-head{font-size:clamp(1.5rem,2.9vw,2.6rem)}
 /* brightened deliberately: --text-mute sat too close to the field to read at a glance */
-.sh-line{color:#e6e1f5;font-weight:300;font-size:clamp(.95rem,1.3vw,1.06rem);max-width:36ch}
-.sh-cta{margin-top:.5rem;display:inline-flex;align-items:center;gap:.55rem;
+.sh-line{display:block;color:#f0ecff;font-weight:300;font-size:clamp(.95rem,1.3vw,1.06rem);max-width:36ch}
+.sh-cta{margin-top:1rem;display:inline-flex;align-items:center;gap:.55rem;
   padding:.85rem 1.7rem;border-radius:999px;font-weight:700;font-size:1rem;color:#fff;
   background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.05) 42%,transparent 64%),
     var(--sh-cta),rgba(6,5,13,.34);
@@ -274,106 +355,117 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .sh-cta i{font-style:normal;transition:transform .35s var(--ease)}
 .sh:hover .sh-cta{transform:translateY(-2px)}
 .sh:hover .sh-cta i{transform:translateX(-5px)}
+.sh-reveal{display:block}
 
-/* The colour each side owns. Both radials are centred on the cut's midpoint, so each
-   panel is brightest where it meets the other and falls away toward its outer edge —
-   which is also where the copy sits, so the type gains contrast as a side effect. */
-.sh-glow{position:absolute;inset:0;z-index:0;transition:opacity .55s var(--ease)}
-.sh--seek{--sh-cta:rgba(124,92,224,.62);z-index:2;justify-content:flex-start;
-  clip-path:polygon(100% 0,100% 100%,var(--cut-b) 100%,var(--cut-t) 0);
-  transition:clip-path .6s var(--ease)}
-.sh--seek .sh-glow{opacity:.94;background:
-  radial-gradient(78% 68% at 50% 50%,rgba(167,124,255,.62),rgba(96,52,205,.26) 46%,transparent 74%),
-  linear-gradient(215deg,rgba(84,40,190,.5),rgba(9,6,26,.62) 72%)}
-.sh--hire{--sh-cta:rgba(40,108,224,.62);z-index:1;justify-content:flex-end}
-.sh--hire .sh-glow{opacity:.94;background:
-  radial-gradient(78% 68% at 50% 50%,rgba(72,148,255,.58),rgba(22,68,190,.26) 46%,transparent 74%),
-  linear-gradient(145deg,rgba(16,58,155,.54),rgba(5,9,30,.62) 72%)}
-.sh:hover .sh-glow{opacity:1}
+/* The fold. 0fr→1fr is the one way to transition a block to its own content height, and
+   it needs the child to be able to shrink — hence overflow and min-height on the row.
+   Pointer-only: a sliver too narrow for this copy is a fair trade for a hover that opens
+   it, but not for a phone, where there is nothing to hover with. */
+@media (hover:hover) and (min-width:861px){
+  .sh-reveal{display:grid;grid-template-rows:0fr;opacity:0;
+    transition:grid-template-rows .55s var(--ease),opacity .35s var(--ease)}
+  .sh-reveal>*{overflow:hidden;min-height:0}
+  .sh:is(:hover,:focus-within) .sh-reveal{grid-template-rows:1fr;opacity:1;
+    transition:grid-template-rows .55s var(--ease),opacity .45s var(--ease) .12s}
+}
 
-/* the hovered side takes territory; moving the pair moves the edge and its light together */
-.hero-split:has(.sh--seek:hover){--cut-t:51%;--cut-b:29%}
-.hero-split:has(.sh--hire:hover){--cut-t:71%;--cut-b:49%}
-
-/* ---- the light along the cut ----
-   Above both panels, so the bloom spills onto each side of the seam rather than being
+/* ---- the light on each cut ----
+   Above the panels, so the bloom spills onto both sides of the line rather than being
    trimmed flat by the clip that draws it. Inside .hero-seam-bloom the band is clipped
    first and the wrapper blurs the result afterwards; doing it the other way round (blur
    on the clipped element) yields a hard-edged smudge, because clip-path is applied after
-   filter on the same box. */
+   filter on the same box. Each line reads its own pair through --ct / --cb, so one set of
+   rules draws both. */
 .hero-seam{grid-area:1/1;position:relative;z-index:3;pointer-events:none}
-.hero-seam-bloom{position:absolute;inset:0;filter:blur(11px);opacity:.72}
+.hero-seam--a{--ct:var(--a-t);--cb:var(--a-b);--c1:236,153,255;--c2:214,190,255}
+.hero-seam--b{--ct:var(--b-t);--cb:var(--b-b);--c1:198,186,255;--c2:170,160,255}
+.hero-seam-bloom{position:absolute;inset:0;filter:blur(11px);opacity:.74}
 .hero-seam-bloom::after,.hero-seam::after{content:'';position:absolute;inset:0;
   transition:clip-path .6s var(--ease)}
 .hero-seam-bloom::after{
-  background:linear-gradient(180deg,rgba(196,168,255,0),rgba(196,168,255,.9) 24%,rgba(147,197,253,.9) 76%,rgba(147,197,253,0));
-  clip-path:polygon(calc(var(--cut-t) - 3px) 0,calc(var(--cut-t) + 3px) 0,calc(var(--cut-b) + 3px) 100%,calc(var(--cut-b) - 3px) 100%)}
+  background:linear-gradient(180deg,rgba(var(--c1),0),rgba(var(--c1),.9) 24%,rgba(var(--c2),.9) 76%,rgba(var(--c2),0));
+  clip-path:polygon(calc(var(--ct) - 3px) 0,calc(var(--ct) + 3px) 0,calc(var(--cb) + 3px) 100%,calc(var(--cb) - 3px) 100%)}
 /* the hairline itself, fading out at both ends so it never stops on a blunt edge */
 .hero-seam::after{
-  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(233,225,255,.95) 26%,rgba(191,219,254,.95) 74%,rgba(255,255,255,0));
-  clip-path:polygon(calc(var(--cut-t) - .75px) 0,calc(var(--cut-t) + .75px) 0,calc(var(--cut-b) + .75px) 100%,calc(var(--cut-b) - .75px) 100%)}
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.92) 26%,rgba(var(--c2),.95) 74%,rgba(var(--c2),0));
+  clip-path:polygon(calc(var(--ct) - .75px) 0,calc(var(--ct) + .75px) 0,calc(var(--cb) + .75px) 100%,calc(var(--cb) - .75px) 100%)}
 
 /* the panels dissolve into the page instead of ending on a ruled line */
 .hero::after{content:'';position:absolute;inset-inline:0;bottom:0;z-index:4;pointer-events:none;
   height:clamp(56px,9vh,110px);background:linear-gradient(180deg,transparent,var(--bg) 94%)}
 
-/* while the intro opens the cut the clip is being written every frame, so the hover
-   transition must stay out of the way or it spends the whole animation chasing it */
-.hero.is-intro .sh--seek,
+/* while the intro opens the cuts the clips are being written every frame, so the hover
+   transition must stay out of the way or it spends the whole animation chasing them */
+.hero.is-intro .sh,
+.hero.is-intro .hero-title,
 .hero.is-intro .hero-seam::after,
 .hero.is-intro .hero-seam-bloom::after{transition:none}
 
 /* ---- MOBILE ----
-   The diagonal stays; it just runs the other way. The panels stack, the cut becomes the
-   slanted edge between them, and --cut-drop is how far that edge falls from one side of
-   the screen to the other. The lower panel is pulled up by exactly the same amount, so
-   it fills the wedge the upper one gives away. */
+   Three panels stacked, two diagonals between them, and nothing folded away — there is
+   no hover here to open it with. --cut-drop is how far each slanted edge falls from one
+   side of the screen to the other; every panel below is pulled up by exactly that, so it
+   fills the wedge the one above gives away. */
 @media (max-width:860px){
-  .hero{--cut-drop:clamp(78px,24vw,150px);min-height:100svh}
-  .hero-split{grid-template-rows:auto auto;align-content:start}
-  .hero-title{padding-top:calc(var(--nav-h) + clamp(1.6rem,5.5vh,3rem))}
-  /* stacked, both blocks read off the same edge — the desktop rule pushes the employers'
-     side to the far left, which only makes sense while the two sit side by side */
-  .sh{grid-area:auto;align-items:flex-start;justify-content:flex-start;padding-inline:var(--pad)}
-  .sh-body{max-width:none;width:100%}
+  .hero{--cut-drop:clamp(70px,20vw,130px);min-height:100svh}
+  .hero-split{grid-template-rows:auto auto auto;align-content:start}
+  .sh{grid-area:auto;display:flex;align-items:flex-start;justify-content:flex-start;
+    padding-inline:var(--pad)}
+  /* the sliver caps are a desktop concern and are written with enough specificity to
+     survive into here, so they have to be undone explicitly rather than just restated */
+  .sh--seek .sh-body,.sh--hire .sh-body,
+  .sh--seek:is(:hover,:focus-within) .sh-body,
+  .sh--hire:is(:hover,:focus-within) .sh-body{max-width:none;transition:none}
+  .sh-head,.sh:is(:hover,:focus-within) .sh-head{font-size:clamp(1.65rem,7vw,2.2rem)}
 
-  .sh--seek{clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut-drop)),0 100%);
-    padding-top:calc(var(--nav-h) + clamp(8.5rem,30vh,13rem));
-    padding-bottom:calc(var(--cut-drop) + clamp(1.4rem,4vh,2.4rem))}
+  /* Each panel is cut at its foot and the next is pulled up to fill the wedge, overrunning
+     the one above by 1px so no seam of page can show between the two edges. The middle
+     one is both at once: slanted head and slanted foot. */
+  .sh--seek,.sh--hire{margin-top:calc(-1 * var(--cut-drop))}
+  .sh--brand{clip-path:polygon(0 0,100% 0,
+                               100% calc(100% - var(--cut-drop)),0 100%)}
+  .sh--seek{clip-path:polygon(0 calc(var(--cut-drop) - 1px),100% -1px,
+                              100% calc(100% - var(--cut-drop)),0 100%)}
+  .sh--hire{clip-path:polygon(0 calc(var(--cut-drop) - 1px),100% -1px,
+                              100% 100%,0 100%)}
+
+  /* back into flow: the band is the full width here, so there is no off-centre strip to
+     track, and the panel needs the lockup in flow to take its height from it */
+  .hero-title{position:static;left:auto;translate:none;transition:none}
+  .sh--brand{display:flex;justify-content:center;align-items:flex-start;
+             padding:calc(var(--nav-h) + clamp(4rem,14vh,7rem)) var(--pad)
+             calc(var(--cut-drop) + clamp(2.4rem,7vh,4rem))}
+  .sh--brand .sh-glow{background:
+    radial-gradient(130% 58% at 50% 34%,rgba(178,148,255,.6),rgba(109,63,240,.3) 46%,transparent 78%),
+    linear-gradient(190deg,rgba(88,40,200,.56),rgba(22,10,58,.66) 76%)}
+
+  .sh--seek{padding-top:calc(var(--cut-drop) + clamp(2rem,6vh,3.2rem));
+    padding-bottom:calc(var(--cut-drop) + clamp(2rem,6vh,3.2rem))}
   .sh--seek .sh-glow{background:
-    radial-gradient(140% 62% at 50% 100%,rgba(167,124,255,.6),rgba(96,52,205,.24) 48%,transparent 78%),
-    linear-gradient(200deg,rgba(84,40,190,.46),rgba(9,6,26,.6) 70%)}
+    radial-gradient(130% 58% at 50% 50%,rgba(232,121,249,.5),rgba(146,38,158,.26) 48%,transparent 80%),
+    linear-gradient(200deg,rgba(120,28,134,.52),rgba(26,8,38,.66) 74%)}
 
-  .sh--hire{margin-top:calc(-1 * var(--cut-drop));
-    padding-top:calc(var(--cut-drop) + clamp(2.2rem,6vh,3.4rem));
+  .sh--hire{padding-top:calc(var(--cut-drop) + clamp(2rem,6vh,3.2rem));
     padding-bottom:clamp(3.4rem,9vh,5rem)}
   .sh--hire .sh-glow{background:
-    radial-gradient(140% 62% at 50% var(--cut-drop),rgba(72,148,255,.56),rgba(22,68,190,.24) 48%,transparent 78%),
-    linear-gradient(160deg,rgba(16,58,155,.5),rgba(5,9,30,.6) 70%)}
+    radial-gradient(130% 58% at 50% var(--cut-drop),rgba(139,124,255,.5),rgba(60,42,175,.26) 48%,transparent 80%),
+    linear-gradient(160deg,rgba(50,32,145,.54),rgba(9,7,32,.66) 74%)}
 
-  /* the seam rides the upper panel here: its position depends on that panel's height,
-     which no percentage of the hero can express once the two stack */
+  /* each line rides the foot of its own panel: its position depends on that panel's
+     height, which no percentage of the hero can express once the three stack */
   .hero-seam{display:none}
+  .sh--brand::before,.sh--brand::after,
   .sh--seek::before,.sh--seek::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none}
-  .sh--seek::before{filter:blur(9px);opacity:.8;
-    background:linear-gradient(90deg,rgba(147,197,253,.95),rgba(196,168,255,.95));
+  .sh--brand::before,.sh--seek::before{filter:blur(9px);opacity:.85;
     clip-path:polygon(0 calc(100% - 5px),100% calc(100% - var(--cut-drop) - 5px),100% calc(100% - var(--cut-drop)),0 100%)}
-  .sh--seek::after{
-    background:linear-gradient(90deg,rgba(191,219,254,.95),rgba(233,225,255,.95));
+  .sh--brand::after,.sh--seek::after{
     clip-path:polygon(0 calc(100% - 1.5px),100% calc(100% - var(--cut-drop) - 1.5px),100% calc(100% - var(--cut-drop)),0 100%)}
+  .sh--brand::before{background:linear-gradient(90deg,rgba(236,153,255,.95),rgba(214,190,255,.95))}
+  .sh--brand::after{background:linear-gradient(90deg,#fff,rgba(236,206,255,.95))}
+  .sh--seek::before{background:linear-gradient(90deg,rgba(198,186,255,.95),rgba(226,160,255,.95))}
+  .sh--seek::after{background:linear-gradient(90deg,rgba(230,224,255,.95),#fff)}
 }
-@media (prefers-reduced-motion:reduce){.sh--seek{transition:none}}
-
-/* WhatsApp as a standing offer rather than a third button competing in the hero.
-   Stacked with the other floating controls on the physical right, clear of the
-   accessibility widget's own corner. */
-.wa-fab{position:fixed;bottom:24px;inset-inline-start:24px;z-index:701;
-  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;
-  background:linear-gradient(135deg,#1faa53,#25d366);box-shadow:0 14px 32px -12px rgba(37,211,102,.8);
-  transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
-.wa-fab svg{width:28px;height:28px}
-.wa-fab:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 20px 42px -12px rgba(37,211,102,.95)}
-
+@media (prefers-reduced-motion:reduce){.sh{transition:none}}
 
 /* ====================================================================
    STATS
@@ -601,12 +693,13 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
 /* ====================================================================
    TO-TOP
    ==================================================================== */
-/* Stacked above the review bubble, not opposite it. `inset-inline-end` resolves to the
-   PHYSICAL left in this RTL document, which is exactly where the accessibility widget
-   plants its own fixed button — and that button carries z-index 99990, so the back-to-top
-   arrow was being buried under it the moment it appeared. Keeping both of the site's own
-   floating controls on one side leaves the accessibility widget its corner. */
-.totop{position:fixed;bottom:152px;inset-inline-start:24px;z-index:700;width:46px;height:46px;
+/* The site's one floating control, and it stays on the physical right. `inset-inline-end`
+   would resolve to the PHYSICAL left in this RTL document, which is exactly where the
+   accessibility widget plants its own fixed button — and that button carries z-index
+   99990, so the back-to-top arrow was buried under it the moment it appeared. It used to
+   sit at 152px to clear the review and WhatsApp bubbles stacked beneath it; with those
+   gone it takes the corner itself. */
+.totop{position:fixed;bottom:24px;inset-inline-start:24px;z-index:700;width:46px;height:46px;
   display:grid;place-items:center;font-size:1.1rem;color:var(--text);
   background:var(--glass-2);border:1px solid var(--line-2);backdrop-filter:blur(10px);
   opacity:0;visibility:hidden;transform:translateY(12px);transition:.4s var(--ease)}
@@ -680,23 +773,6 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
   .tCol{animation:none!important;transform:none!important}
   .tColInner.tclone{display:none}
 }
-
-/* floating "rate us" bubble */
-.review-fab{position:fixed;bottom:88px;inset-inline-start:24px;z-index:700;
-  height:56px;width:56px;padding-inline:15px;border:none;cursor:pointer;border-radius:50px;
-  display:flex;align-items:center;gap:.55rem;overflow:hidden;white-space:nowrap;
-  background:linear-gradient(135deg,var(--v2),var(--v3));color:#fff;
-  box-shadow:0 14px 34px -10px rgba(124,92,224,.75);
-  opacity:0;visibility:hidden;transform:translateY(14px) scale(.92);
-  transition:width .42s var(--ease),opacity .42s var(--ease),transform .42s var(--ease),box-shadow .3s}
-.review-fab.show{opacity:1;visibility:visible;transform:none;animation:fabGlow 3.2s ease-in-out infinite}
-.review-fab:hover{width:182px;box-shadow:0 20px 44px -10px rgba(124,92,224,1)}
-.review-fab-star{width:26px;height:26px;flex-shrink:0;fill:#ffd24a;filter:drop-shadow(0 0 6px rgba(255,200,70,.75))}
-.review-fab-label{font-weight:700;font-size:.96rem;opacity:0;transform:translateX(6px);
-  transition:opacity .3s var(--ease),transform .3s var(--ease)}
-.review-fab:hover .review-fab-label{opacity:1;transform:none}
-@keyframes fabGlow{0%,100%{box-shadow:0 14px 34px -10px rgba(124,92,224,.7)}50%{box-shadow:0 16px 42px -8px rgba(139,92,246,1)}}
-@media (hover:none){.review-fab{width:56px!important}.review-fab-label{display:none}}
 
 /* ====================================================================
    REVEAL STATES (JS animates; .no-js shows everything)

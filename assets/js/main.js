@@ -247,17 +247,24 @@
     }
     gsap.registerPlugin(ScrollTrigger);
 
-    /* The split is the hero now, so the intro introduces the choice: the cut opens out of
-       a vertical seam into its angle, then the title, then each panel's copy, the seekers'
-       side first because it is the reading side.
+    /* The split is the hero, so the intro states the composition: both cuts start folded
+       together on the centre line and open outward, the violet growing into the screen
+       and pushing the two side fields to the edges. Then the title, then each panel's
+       label, the seekers' side first because it is the reading side.
 
-       The cut is animated through --cut-t / --cut-b rather than through clip-path itself.
-       Writing clip-path directly would leave an inline value on .sh--seek that outranks
-       the :has() hover rules for the rest of the session, and it would leave the seam
-       light — drawn by pseudo-elements GSAP cannot reach — stranded at the final angle
-       while the colour boundary swept past it. Driving the variable moves the panel, its
-       edge and its glow as one thing. */
-    gsap.set('.hero-title, .sh-body', { opacity: 0, y: 18 });
+       The cuts are animated through their variables rather than through clip-path itself.
+       Writing clip-path directly would leave inline values on the panels that outrank the
+       :has() hover rules for the rest of the session, and it would leave the seam lights —
+       drawn by pseudo-elements GSAP cannot reach — stranded at the final angle while the
+       colour boundaries swept past them. Driving the four variables moves every panel,
+       every edge and both glows as one thing. */
+    const REST = { '--a-t': '80%', '--a-b': '72%', '--b-t': '28%', '--b-b': '20%' };
+    /* The lockup's parts, not .hero-title itself. Touching the h1 makes GSAP normalise its
+       transform and write `scale: none` inline, which outranks the stylesheet for the rest
+       of the session — and the stylesheet is what scales the brand down when you reach for
+       one of the side panels. Animating the children leaves that property free. */
+    const LOCKUP = '.ht-mark, .ht-rule, .ht-sub, .ht-more';
+    gsap.set(LOCKUP + ', .sh-body', { opacity: 0, y: 18 });
     const hero = doc.querySelector('.hero');
     const split = doc.querySelector('.hero-split');
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -265,21 +272,20 @@
     if (split) {
       hero.classList.add('is-intro');
       tl.fromTo(split,
-        { '--cut-t': '50%', '--cut-b': '50%' },
-        { '--cut-t': '61%', '--cut-b': '39%', duration: 1.05, ease: 'power4.inOut',
+        { '--a-t': '52%', '--a-b': '52%', '--b-t': '48%', '--b-b': '48%' },
+        { ...REST, duration: 1.15, ease: 'power4.inOut',
           onComplete() {
             // hand the geometry back to the stylesheet, or hover has nothing left to move
-            split.style.removeProperty('--cut-t');
-            split.style.removeProperty('--cut-b');
+            Object.keys(REST).forEach((k) => split.style.removeProperty(k));
             hero.classList.remove('is-intro');
           } }, 0);
     }
     /* Absolute positions, not relative ones: '-=' offsets count back from the end of the
        whole timeline, and with the cut still running that end keeps moving, which pushed
        the copy out to nearly five seconds after load. The three overlap on purpose. */
-    tl.to('.hero-title', { opacity: 1, y: 0, duration: .75 }, .18)
-      .to('.sh--seek .sh-body', { opacity: 1, y: 0, duration: .8 }, .42)
-      .to('.sh--hire .sh-body', { opacity: 1, y: 0, duration: .8 }, .58);
+    tl.to(LOCKUP, { opacity: 1, y: 0, duration: .75, stagger: .07 }, .18)
+      .to('.sh--seek .sh-body', { opacity: 1, y: 0, duration: .8 }, .48)
+      .to('.sh--hire .sh-body', { opacity: 1, y: 0, duration: .8 }, .62);
 
     // generic reveals (everything outside the hero)
     gsap.utils.toArray('[data-reveal]').forEach(el => {
@@ -315,8 +321,13 @@
        captured 0 as its start value — so the first scroll of the page handed the title
        straight to the scrub, which drove it to .3 and never gave it back. "ג'וב פאוור"
        simply went out the moment you touched the wheel. Movement alone reads as depth
-       and has no state to get stuck in. */
-    gsap.to('.hero-split, .hero-title', { yPercent: 7, ease: 'none',
+       and has no state to get stuck in.
+
+       .hero-split alone, too: the title lives inside it now, so naming the h1 here as
+       well only handed GSAP another element to normalise — and the `scale: none` it
+       writes while doing so outranks the stylesheet rule that shrinks the brand when you
+       reach for one of the side panels, which quietly disabled that for good. */
+    gsap.to('.hero-split', { yPercent: 7, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
     // process timeline progress + active steps
@@ -522,23 +533,6 @@
     wrap.addEventListener('mouseleave', () => paint(0, 'hot'));
   }
 
-  function initReviewFab() {
-    const fab = doc.getElementById('reviewFab');
-    const target = doc.getElementById('reviews');
-    if (!fab || !target) return;
-    let inView = false;
-    const update = () => fab.classList.toggle('show', window.scrollY > innerHeight * 0.55 && !inView);
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(es => { es.forEach(e => { inView = e.isIntersecting; }); update(); }, { threshold: .2 }).observe(target);
-    }
-    addEventListener('scroll', update, { passive: true });
-    update();
-    fab.addEventListener('click', () => {
-      if (window.lenis) window.lenis.scrollTo(target, { offset: -64, duration: 1.1 });
-      else target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    });
-  }
-
   // duplicate each testimonials column so the vertical marquee loops seamlessly
   function initReviewsWall() {
     if (reduceMotion) return;                       // static; CSS shows one set
@@ -574,7 +568,6 @@
     initNav();
     initCounters();
     initReviews();
-    initReviewFab();
     initReviewsWall();
     initSmooth();
     initPreloader(() => initMotion());
