@@ -28,7 +28,7 @@
     '#jpaPanel{position:fixed;bottom:80px;left:18px;z-index:99991;width:min(86vw,300px);background:#fff;color:#111;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.35);padding:14px;display:none;font-family:Arial,sans-serif;font-size:15px}',
     '#jpaPanel.open{display:block}',
     '#jpaPanel h2{font-size:16px;margin:0 0 10px}',
-    '#jpaPanel button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:8px;border:1px solid #ccc;background:#f6f6f6;color:#111;font:inherit;text-align:right;cursor:pointer}',
+    '#jpaPanel button{display:block;width:100%;margin:6px 0;padding:10px;border-radius:8px;border:1px solid #ccc;background:#f6f6f6;color:#111;font:inherit;text-align:start;cursor:pointer}',
     '#jpaPanel button[aria-pressed="true"]{background:#1f6feb;color:#fff;border-color:#1f6feb}',
     '#jpaPanel .jpa-fsrow{display:flex;gap:6px}',
     '#jpaPanel .jpa-fsrow button{width:auto;flex:1;text-align:center}',
@@ -47,28 +47,31 @@
   document.addEventListener('DOMContentLoaded', function () {
     var main = document.querySelector('main, section, .hero');
     if (main && !main.id) main.id = 'jpa-main';
-    if (main) document.body.insertBefore(el('<a class="jpa-skip" href="#' + main.id + '">דילוג לתוכן</a>'), document.body.firstChild);
+    if (main) document.body.insertBefore(el('<a class="jpa-skip" href="#' + main.id + '" data-i18n="a11y.skip">דילוג לתוכן</a>'), document.body.firstChild);
 
-    var btn = el('<button id="jpaBtn" type="button" aria-label="תפריט נגישות" aria-expanded="false" aria-controls="jpaPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg></button>');
-    var panel = el('<div id="jpaPanel" role="group" aria-label="הגדרות נגישות">' +
-      '<h2>נגישות</h2>' +
-      '<div class="jpa-fsrow"><button type="button" data-fs="1" aria-label="הגדלת טקסט">א+</button><button type="button" data-fs="-1" aria-label="הקטנת טקסט">א-</button></div>' +
-      '<button type="button" data-k="contrast">ניגודיות גבוהה</button>' +
-      '<button type="button" data-k="links">הדגשת קישורים</button>' +
-      '<button type="button" data-k="font">גופן קריא</button>' +
-      '<button type="button" data-k="motion">עצירת אנימציות</button>' +
-      '<button type="button" data-reset>איפוס</button>' +
-      '<button type="button" data-statement>הצהרת נגישות</button></div>');
-    var modal = el('<div id="jpaStatement" role="dialog" aria-modal="true" aria-label="הצהרת נגישות"><div class="jpa-box">' +
-      '<h2>הצהרת נגישות</h2>' +
-      '<p>אתר Job Power פועל להנגשת האתר לכלל הגולשים, כולל אנשים עם מוגבלות, בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג 2013, לתקן הישראלי (ת"י 5568) ולהנחיות WCAG 2.1 ברמה AA.</p>' +
-      '<p>באתר: תפריט נגישות (הגדלת טקסט, ניגודיות גבוהה, הדגשת קישורים, גופן קריא ועצירת אנימציות), ניווט מקלדת מלא ותמיכה בהעדפת הפחתת תנועה של מערכת ההפעלה.</p>' +
-      '<p>נתקלתם בקושי? נשמח לשמוע ולתקן, ניתן לפנות אלינו דרך פרטי הקשר שבאתר.</p>' +
-      '<p>עדכון אחרון: יולי 2026</p>' +
-      '<button type="button" data-close style="margin-top:10px;padding:10px 18px;border-radius:8px;border:1px solid #ccc;background:#f6f6f6;cursor:pointer">סגירה</button></div></div>');
+    var btn = el('<button id="jpaBtn" type="button" data-i18n-attr="aria-label:a11y.btnAria" aria-label="תפריט נגישות" aria-expanded="false" aria-controls="jpaPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg></button>');
+    var panel = el('<div id="jpaPanel" role="group" data-i18n-attr="aria-label:a11y.panelAria" aria-label="הגדרות נגישות">' +
+      '<h2 data-i18n="a11y.title">נגישות</h2>' +
+      '<div class="jpa-fsrow"><button type="button" data-fs="1" data-i18n-attr="aria-label:a11y.biggerAria" aria-label="הגדלת טקסט">א+</button><button type="button" data-fs="-1" data-i18n-attr="aria-label:a11y.smallerAria" aria-label="הקטנת טקסט">א-</button></div>' +
+      '<button type="button" data-k="contrast" data-i18n="a11y.contrast">ניגודיות גבוהה</button>' +
+      '<button type="button" data-k="links" data-i18n="a11y.links">הדגשת קישורים</button>' +
+      '<button type="button" data-k="font" data-i18n="a11y.font">גופן קריא</button>' +
+      '<button type="button" data-k="motion" data-i18n="a11y.motion">עצירת אנימציות</button>' +
+      '<button type="button" data-reset data-i18n="a11y.reset">איפוס</button>' +
+      '<button type="button" data-statement data-i18n="a11y.statement">הצהרת נגישות</button></div>');
+    var modal = el('<div id="jpaStatement" role="dialog" aria-modal="true" data-i18n-attr="aria-label:a11y.stTitle" aria-label="הצהרת נגישות"><div class="jpa-box">' +
+      '<h2 data-i18n="a11y.stTitle">הצהרת נגישות</h2>' +
+      '<p data-i18n="a11y.stP1">אתר Job Power פועל להנגשת האתר לכלל הגולשים, כולל אנשים עם מוגבלות, בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג 2013, לתקן הישראלי (ת"י 5568) ולהנחיות WCAG 2.1 ברמה AA.</p>' +
+      '<p data-i18n="a11y.stP2">באתר: תפריט נגישות (הגדלת טקסט, ניגודיות גבוהה, הדגשת קישורים, גופן קריא ועצירת אנימציות), ניווט מקלדת מלא ותמיכה בהעדפת הפחתת תנועה של מערכת ההפעלה.</p>' +
+      '<p data-i18n="a11y.stP3">נתקלתם בקושי? נשמח לשמוע ולתקן, ניתן לפנות אלינו דרך פרטי הקשר שבאתר.</p>' +
+      '<p data-i18n="a11y.stP4">עדכון אחרון: יולי 2026</p>' +
+      '<button type="button" data-close data-i18n="a11y.close" style="margin-top:10px;padding:10px 18px;border-radius:8px;border:1px solid #ccc;background:#f6f6f6;cursor:pointer">סגירה</button></div></div>');
     document.body.appendChild(btn);
     document.body.appendChild(panel);
     document.body.appendChild(modal);
+    /* the widget is built here, after i18n.js has already run its first pass, so it has
+       to ask to be included rather than waiting to be found */
+    if (window.JPI18N) window.JPI18N.refresh();
 
     function save() { localStorage.setItem(KEY, JSON.stringify(s)); }
     function sync() {

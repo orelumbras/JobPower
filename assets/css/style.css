@@ -44,7 +44,9 @@ body{
   font-family:var(--font-he);
   background:var(--bg);
   color:var(--text);
-  direction:rtl;
+  /* direction comes from <html dir>, which i18n.js sets before the body is parsed.
+     Hard-coding it here would pin the page to RTL and the Russian build would lay out
+     backwards. */
   overflow-x:hidden;
   line-height:1.62;
   -webkit-font-smoothing:antialiased;
@@ -123,6 +125,17 @@ nav.scrolled{height:62px;background:rgba(6,5,13,.6);backdrop-filter:blur(20px) s
 .nav-cta{padding:.55rem 1.4rem;border-radius:2px;font-weight:600;font-size:.9rem;color:#fff;
   border:1px solid var(--line-v);background:rgba(139,92,246,.1);transition:.3s var(--ease)}
 .nav-cta:hover{background:var(--v2);border-color:var(--v2);box-shadow:0 8px 26px -10px rgba(124,92,224,.8)}
+/* Language toggle. Sized off the nav CTA so the two read as one control group, and kept
+   visible at every width — the CTA and the links go away on mobile, this must not. */
+.lang-btn{flex-shrink:0;display:grid;place-items:center;min-width:44px;height:34px;
+  padding-inline:.7rem;cursor:pointer;border-radius:999px;
+  border:1px solid var(--line-v);background:rgba(139,92,246,.1);color:var(--text);
+  font-family:var(--font-lat);font-weight:600;font-size:.82rem;letter-spacing:.06em;
+  transition:.3s var(--ease)}
+.lang-btn:hover{background:var(--v2);border-color:var(--v2);color:#fff;
+  box-shadow:0 8px 26px -10px rgba(124,92,224,.8)}
+.lang-code{line-height:1}
+
 .nav-burger{display:none;width:42px;height:38px;border:1px solid var(--line-2);background:transparent;position:relative;cursor:pointer}
 .nav-burger span{position:absolute;inset-inline:10px;height:1.5px;background:var(--text);transition:.35s var(--ease)}
 .nav-burger span:nth-child(1){top:14px}
@@ -277,8 +290,11 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .sh--seek:is(:hover,:focus-within) .sh-body,
 .sh--hire:is(:hover,:focus-within) .sh-body{max-width:min(42%,36ch)}
 
+/* `right`/`left`, not flex-start/flex-end: the clips that carve these panels are physical
+   percentages, so the copy has to be pinned physically too. Logical alignment would send
+   the Russian build's seekers copy to the left while its field stayed on the right. */
 .sh--seek{--sh-cta:rgba(192,38,211,.62);z-index:2;
-  display:flex;justify-content:flex-start;align-items:flex-end;
+  display:flex;justify-content:right;align-items:flex-end;
   padding:calc(var(--nav-h) + clamp(7rem,20vh,11rem)) var(--sh-pad) clamp(4.5rem,11vh,7.5rem);
   clip-path:polygon(100% 0,100% 100%,var(--a-b) 100%,var(--a-t) 0)}
 .sh--seek .sh-glow{opacity:.94;background:
@@ -286,7 +302,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
   linear-gradient(215deg,rgba(120,28,134,.56),rgba(26,8,38,.68) 74%)}
 
 .sh--hire{--sh-cta:rgba(79,70,229,.64);z-index:2;
-  display:flex;justify-content:flex-end;align-items:flex-start;
+  display:flex;justify-content:left;align-items:flex-start;
   padding:calc(var(--nav-h) + clamp(2.4rem,7vh,4.4rem)) var(--sh-pad) clamp(3rem,8vh,5rem);
   clip-path:polygon(0 0,var(--b-t) 0,var(--b-b) 100%,0 100%)}
 .sh--hire .sh-glow{opacity:.94;background:
@@ -411,6 +427,8 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
   .hero-split{grid-template-rows:auto auto auto;align-content:start}
   .sh{grid-area:auto;display:flex;align-items:flex-start;justify-content:flex-start;
     padding-inline:var(--pad)}
+  /* stacked and full width, so the copy follows the reading direction again */
+  .sh--seek,.sh--hire{justify-content:flex-start}
   /* the sliver caps are a desktop concern and are written with enough specificity to
      survive into here, so they have to be undone explicitly rather than just restated */
   .sh--seek .sh-body,.sh--hire .sh-body,
@@ -511,7 +529,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .about-cols{display:grid;grid-template-columns:1fr 1fr;gap:2.4rem}
 .about-cols p{color:var(--text-soft);font-size:1.04rem}
 .facts{list-style:none;display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);margin-top:.6rem}
-.facts li{display:flex;align-items:baseline;gap:.6rem;padding:1rem 1.4rem 1rem 0;flex:1 1 180px;
+.facts li{display:flex;align-items:baseline;gap:.6rem;padding-block:1rem;padding-inline:1.4rem 0;flex:1 1 180px;
   border-bottom:1px solid var(--line);font-weight:500;color:var(--text-soft)}
 .facts li span{font-family:var(--font-lat);font-size:.8rem;color:var(--v4)}
 
@@ -814,6 +832,30 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
   [data-reveal],[data-reveal-stagger]>*{opacity:1!important;transform:none!important;clip-path:none!important}
   .bg-video{display:none}
 }
+
+/* ====================================================================
+   LTR (RUSSIAN)
+   Nearly all of this file is written in logical properties and mirrors on its own when
+   <html dir> flips. What is left is the handful of places that are deliberately physical,
+   plus the arrows: those are literal glyphs in the markup, so they are flipped here
+   rather than translated, which keeps one string per key instead of one per direction.
+   ==================================================================== */
+html[dir="ltr"] .nav-links a::after,
+html[dir="ltr"] .svc::before,
+html[dir="ltr"] .wcard::before{transform-origin:left}
+html[dir="ltr"] .chip{direction:ltr}
+html[dir="ltr"] .crow-val{text-align:left}
+html[dir="ltr"] .crow-arr,
+html[dir="ltr"] .sh-cta i,
+html[dir="ltr"] .ht-more i{display:inline-block;scale:-1 1}
+html[dir="ltr"] .sh--brand:hover .ht-more i,
+html[dir="ltr"] .sh:hover .sh-cta i{transform:translateX(-5px)}
+html[dir="ltr"] .crow:hover .crow-arr{transform:translateX(-6px) translateY(-6px)}
+/* Russian sets much wider than Hebrew at the same size; the sliver headlines are the one
+   place on the page with no room to absorb it */
+html[dir="ltr"] .sh-head{font-size:clamp(1.15rem,1.85vw,1.7rem)}
+html[dir="ltr"] .sh:is(:hover,:focus-within) .sh-head{font-size:clamp(1.35rem,2.5vw,2.3rem)}
+html[dir="ltr"] .ht-sub{letter-spacing:.14em}
 
 /* ====================================================================
    TOUCH: STATE BY POSITION, NOT BY TOUCH

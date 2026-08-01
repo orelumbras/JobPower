@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=22">
+<link rel="stylesheet" href="assets/css/style.css?v=23">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -48,24 +48,27 @@
     <b>Job Power <span>HR</span></b>
   </a>
   <ul class="nav-links">
-    <li><a href="#about">אודותינו</a></li>
-    <li><a href="#services">שירותים</a></li>
-    <li><a href="#process">התהליך</a></li>
-    <li><a href="#why">למה אנחנו</a></li>
-    <li><a href="#reviews">המלצות</a></li>
+    <li><a href="#about" data-i18n="nav.about">אודותינו</a></li>
+    <li><a href="#services" data-i18n="nav.services">שירותים</a></li>
+    <li><a href="#process" data-i18n="nav.process">התהליך</a></li>
+    <li><a href="#why" data-i18n="nav.why">למה אנחנו</a></li>
+    <li><a href="#reviews" data-i18n="nav.reviews">המלצות</a></li>
   </ul>
-  <a href="#contact" class="nav-cta" data-magnetic="0.3">צור קשר</a>
-  <button class="nav-burger" aria-label="תפריט"><span></span><span></span></button>
+  <a href="#contact" class="nav-cta" data-magnetic="0.3" data-i18n="nav.cta">צור קשר</a>
+  <!-- Shows the language you would switch TO, which is the only unambiguous label for a
+       two-language toggle: a flag or the current language both read as "you are here". -->
+  <button class="lang-btn" id="langBtn" type="button" data-i18n-attr="aria-label:nav.langAria" aria-label="החלפת שפה לרוסית"><span class="lang-code">RU</span></button>
+  <button class="nav-burger" data-i18n-attr="aria-label:nav.menuAria" aria-label="תפריט"><span></span><span></span></button>
 </nav>
 
 <!-- ===== MOBILE MENU ===== -->
 <div class="mobile-menu">
-  <a href="#about"><span>01</span> אודותינו</a>
-  <a href="#services"><span>02</span> שירותים</a>
-  <a href="#process"><span>03</span> התהליך</a>
-  <a href="#why"><span>04</span> למה אנחנו</a>
-  <a href="#reviews"><span>05</span> המלצות</a>
-  <a href="#contact"><span>06</span> צור קשר</a>
+  <a href="#about" data-i18n-html="menu.about"><span>01</span> אודותינו</a>
+  <a href="#services" data-i18n-html="menu.services"><span>02</span> שירותים</a>
+  <a href="#process" data-i18n-html="menu.process"><span>03</span> התהליך</a>
+  <a href="#why" data-i18n-html="menu.why"><span>04</span> למה אנחנו</a>
+  <a href="#reviews" data-i18n-html="menu.reviews"><span>05</span> המלצות</a>
+  <a href="#contact" data-i18n-html="menu.contact"><span>06</span> צור קשר</a>
 </div>
 
 <!-- ===== HERO =====
@@ -85,21 +88,21 @@
     <a class="sh sh--brand" href="#why">
       <span class="sh-glow" aria-hidden="true"></span>
       <h1 class="hero-title">
-        <span class="ht-mark">ג'וב פאוור</span>
+        <span class="ht-mark" data-i18n="hero.mark">ג'וב פאוור</span>
         <span class="ht-rule" aria-hidden="true"></span>
-        <span class="ht-sub">גיוס והשמת משאבי אנוש · חדרה · מאז 2010</span>
-        <span class="ht-more">היתרון שלנו <i aria-hidden="true">←</i></span>
+        <span class="ht-sub" data-i18n="hero.sub">גיוס והשמת משאבי אנוש · חדרה · מאז 2010</span>
+        <span class="ht-more" data-i18n-html="hero.more">היתרון שלנו <i aria-hidden="true">←</i></span>
       </h1>
     </a>
 
     <a class="sh sh--seek" href="#contact">
       <span class="sh-glow" aria-hidden="true"></span>
       <span class="sh-body">
-        <span class="sh-kicker">מחפשים עבודה</span>
-        <span class="sh-head">המשרה הבאה<br>כבר במאגר</span>
+        <span class="sh-kicker" data-i18n="hero.seek.kicker">מחפשים עבודה</span>
+        <span class="sh-head" data-i18n-html="hero.seek.head">המשרה הבאה<br>כבר במאגר</span>
         <span class="sh-reveal">
-          <span class="sh-line">שולחים קורות חיים, ואנחנו מתאימים אתכם למשרה שבאמת מתאימה, בליווי אישי עד היום הראשון.</span>
-          <span class="sh-cta">לשליחת קורות חיים <i aria-hidden="true">←</i></span>
+          <span class="sh-line" data-i18n="hero.seek.line">שולחים קורות חיים, ואנחנו מתאימים אתכם למשרה שבאמת מתאימה, בליווי אישי עד היום הראשון.</span>
+          <span class="sh-cta" data-i18n-html="hero.seek.cta">לשליחת קורות חיים <i aria-hidden="true">←</i></span>
         </span>
       </span>
     </a>
@@ -107,11 +110,11 @@
     <a class="sh sh--hire" href="#contact">
       <span class="sh-glow" aria-hidden="true"></span>
       <span class="sh-body">
-        <span class="sh-kicker">מגייסים עובדים</span>
-        <span class="sh-head">העובד הנכון,<br>בלי חודשים של חיפוש</span>
+        <span class="sh-kicker" data-i18n="hero.hire.kicker">מגייסים עובדים</span>
+        <span class="sh-head" data-i18n-html="hero.hire.head">העובד הנכון,<br>בלי חודשים של חיפוש</span>
         <span class="sh-reveal">
-          <span class="sh-line">מאגר שמתעדכן מדי יום, מיון ואבחון מקצועי, ומועמדים מסוננים אצלכם על השולחן.</span>
-          <span class="sh-cta">לאיתור עובדים <i aria-hidden="true">←</i></span>
+          <span class="sh-line" data-i18n="hero.hire.line">מאגר שמתעדכן מדי יום, מיון ואבחון מקצועי, ומועמדים מסוננים אצלכם על השולחן.</span>
+          <span class="sh-cta" data-i18n-html="hero.hire.cta">לאיתור עובדים <i aria-hidden="true">←</i></span>
         </span>
       </span>
     </a>
@@ -127,31 +130,31 @@
 
 <!-- ===== STATS ===== -->
 <section class="stats container">
-  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="2010">2010</div><div class="stat-label">שנת הקמה</div></div>
-  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="6">6</div><div class="stat-label">תחומי השמה</div></div>
-  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="100" data-suffix="%">100%</div><div class="stat-label">טיפול אישי</div></div>
-  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="15" data-suffix="+">15+</div><div class="stat-label">שנות ניסיון</div></div>
+  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="2010">2010</div><div class="stat-label" data-i18n="stats.founded">שנת הקמה</div></div>
+  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="6">6</div><div class="stat-label" data-i18n="stats.fields">תחומי השמה</div></div>
+  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="100" data-suffix="%">100%</div><div class="stat-label" data-i18n="stats.personal">טיפול אישי</div></div>
+  <div class="stat" data-reveal="rise"><div class="stat-num" data-count="15" data-suffix="+">15+</div><div class="stat-label" data-i18n="stats.years">שנות ניסיון</div></div>
 </section>
 
 <!-- ===== ABOUT ===== -->
 <section class="sec" id="about">
   <div class="container">
     <header class="sec-head">
-      <h2 class="title" data-reveal="mask">מחברים בין אנשים<br>ל<em>הזדמנויות</em> הנכונות</h2>
+      <h2 class="title" data-reveal="mask" data-i18n-html="about.title">מחברים בין אנשים<br>ל<em>הזדמנויות</em> הנכונות</h2>
     </header>
 
     <div class="about-body">
-      <p class="lead" data-reveal="rise"><span class="brand">Job Power</span> הוקמה בחדרה בשנת 2010 ועוסקת בגיוס והשמת משאבי אנוש למקומות עבודה. מטפלים בכל שלבי האיתור, הגיוס, המיון, האבחון והיישום, ומבטיחים שירות מקצועי ברמת איכות גבוהה ביותר.</p>
+      <p class="lead" data-reveal="rise" data-i18n-html="about.lead"><span class="brand">Job Power</span> הוקמה בחדרה בשנת 2010 ועוסקת בגיוס והשמת משאבי אנוש למקומות עבודה. מטפלים בכל שלבי האיתור, הגיוס, המיון, האבחון והיישום, ומבטיחים שירות מקצועי ברמת איכות גבוהה ביותר.</p>
       <div class="about-cols" data-reveal="rise">
-        <p>צוות Job Power מותאם לאופי שירותיה במתן טיפול אישי ומתמיד ללקוחות. שירותי ההשמה מבוססים על מאגר גדול ואיכותי של עובדים מכל התחומים.</p>
-        <p>אנו נעזרים במאגר נתונים המתעדכן מדי יום ומקיימים משובים תקופתיים על מנת לעמוד בשביעות רצון לקוחותינו לאורך זמן.</p>
+        <p data-i18n="about.p1">צוות Job Power מותאם לאופי שירותיה במתן טיפול אישי ומתמיד ללקוחות. שירותי ההשמה מבוססים על מאגר גדול ואיכותי של עובדים מכל התחומים.</p>
+        <p data-i18n="about.p2">אנו נעזרים במאגר נתונים המתעדכן מדי יום ומקיימים משובים תקופתיים על מנת לעמוד בשביעות רצון לקוחותינו לאורך זמן.</p>
       </div>
       <ul class="facts" data-reveal-stagger>
-        <li><span>01</span> מיון מקצועי</li>
-        <li><span>02</span> אבחון מתאים</li>
-        <li><span>03</span> מאגר יומי</li>
-        <li><span>04</span> טיפול אישי</li>
-        <li><span>05</span> משוב תקופתי</li>
+        <li data-i18n-html="about.f1"><span>01</span> מיון מקצועי</li>
+        <li data-i18n-html="about.f2"><span>02</span> אבחון מתאים</li>
+        <li data-i18n-html="about.f3"><span>03</span> מאגר יומי</li>
+        <li data-i18n-html="about.f4"><span>04</span> טיפול אישי</li>
+        <li data-i18n-html="about.f5"><span>05</span> משוב תקופתי</li>
       </ul>
     </div>
   </div>
@@ -168,48 +171,48 @@
 <section class="sec match" id="match" aria-labelledby="matchTitle">
   <div class="match-stage">
     <div class="container match-head">
-      <h2 class="title" id="matchTitle" data-reveal="mask">שני צדדים.<br>התאמה <em>אחת</em>.</h2>
-      <p class="sub" data-reveal="rise">בכל יום עוברים דרכנו מועמדים ומשרות. כל העבודה שלנו היא הרגע המדויק שבו השניים נפגשים.</p>
+      <h2 class="title" id="matchTitle" data-reveal="mask" data-i18n-html="match.title">שני צדדים.<br>התאמה <em>אחת</em>.</h2>
+      <p class="sub" data-reveal="rise" data-i18n="match.sub">בכל יום עוברים דרכנו מועמדים ומשרות. כל העבודה שלנו היא הרגע המדויק שבו השניים נפגשים.</p>
     </div>
 
     <div class="match-rails">
-      <p class="rail-cap rail-cap--people">מועמדים</p>
+      <p class="rail-cap rail-cap--people" data-i18n="match.capPeople">מועמדים</p>
 
       <div class="rail rail--people">
         <div class="rail-track" id="railPeople">
-          <span class="chip"><b>מהנדס תוכנה</b><i>7 שנות ניסיון</i></span>
-          <span class="chip"><b>מנהלת חשבונות</b><i>סוג 3</i></span>
-          <span class="chip"><b>טכנאי אחזקה</b><i>מוסמך</i></span>
-          <span class="chip"><b>רכזת גיוס</b><i>אקדמאית</i></span>
-          <span class="chip"><b>בודק QA</b><i>אוטומציה</i></span>
-          <span class="chip"><b>חשמלאי מוסמך</b><i>רישיון הנדסאי</i></span>
-          <span class="chip"><b>מזכירה רפואית</b><i>דוברת 3 שפות</i></span>
-          <span class="chip"><b>מנהל משמרת</b><i>ניהול 20 עובדים</i></span>
+          <span class="chip" data-i18n-html="match.p1"><b>מהנדס תוכנה</b><i>7 שנות ניסיון</i></span>
+          <span class="chip" data-i18n-html="match.p2"><b>מנהלת חשבונות</b><i>סוג 3</i></span>
+          <span class="chip" data-i18n-html="match.p3"><b>טכנאי אחזקה</b><i>מוסמך</i></span>
+          <span class="chip" data-i18n-html="match.p4"><b>רכזת גיוס</b><i>אקדמאית</i></span>
+          <span class="chip" data-i18n-html="match.p5"><b>בודק QA</b><i>אוטומציה</i></span>
+          <span class="chip" data-i18n-html="match.p6"><b>חשמלאי מוסמך</b><i>רישיון הנדסאי</i></span>
+          <span class="chip" data-i18n-html="match.p7"><b>מזכירה רפואית</b><i>דוברת 3 שפות</i></span>
+          <span class="chip" data-i18n-html="match.p8"><b>מנהל משמרת</b><i>ניהול 20 עובדים</i></span>
         </div>
       </div>
 
       <div class="match-line" aria-hidden="true">
         <span class="match-seam"></span>
-        <span class="match-badge">התאמה</span>
+        <span class="match-badge" data-i18n="match.badge">התאמה</span>
       </div>
 
       <div class="rail rail--roles">
         <div class="rail-track" id="railRoles">
-          <span class="chip"><b>מפעל תעשייה</b><i>חדרה</i></span>
-          <span class="chip"><b>משרד רו״ח</b><i>פרדס חנה</i></span>
-          <span class="chip"><b>מרכז לוגיסטי</b><i>קיסריה</i></span>
-          <span class="chip"><b>חברת סטארטאפ</b><i>הרצליה</i></span>
-          <span class="chip"><b>בית מלון</b><i>נתניה</i></span>
-          <span class="chip"><b>חברת הובלות</b><i>עמק חפר</i></span>
-          <span class="chip"><b>מרפאה פרטית</b><i>חדרה</i></span>
-          <span class="chip"><b>מפעל מזון</b><i>עמק חפר</i></span>
+          <span class="chip" data-i18n-html="match.r1"><b>מפעל תעשייה</b><i>חדרה</i></span>
+          <span class="chip" data-i18n-html="match.r2"><b>משרד רו״ח</b><i>פרדס חנה</i></span>
+          <span class="chip" data-i18n-html="match.r3"><b>מרכז לוגיסטי</b><i>קיסריה</i></span>
+          <span class="chip" data-i18n-html="match.r4"><b>חברת סטארטאפ</b><i>הרצליה</i></span>
+          <span class="chip" data-i18n-html="match.r5"><b>בית מלון</b><i>נתניה</i></span>
+          <span class="chip" data-i18n-html="match.r6"><b>חברת הובלות</b><i>עמק חפר</i></span>
+          <span class="chip" data-i18n-html="match.r7"><b>מרפאה פרטית</b><i>חדרה</i></span>
+          <span class="chip" data-i18n-html="match.r8"><b>מפעל מזון</b><i>עמק חפר</i></span>
         </div>
       </div>
 
-      <p class="rail-cap rail-cap--roles">משרות פתוחות</p>
+      <p class="rail-cap rail-cap--roles" data-i18n="match.capRoles">משרות פתוחות</p>
     </div>
 
-    <p class="match-foot">המאגר מתעדכן מדי יום, משני הכיוונים</p>
+    <p class="match-foot" data-i18n="match.foot">המאגר מתעדכן מדי יום, משני הכיוונים</p>
   </div>
 </section>
 
@@ -217,67 +220,67 @@
 <section class="sec" id="services">
   <div class="container">
     <header class="sec-head">
-      <h2 class="title" data-reveal="mask">השמה לכל תחום מקצועי</h2>
-      <p class="sub" data-reveal="rise">פתרונות גיוס מקצועיים בשישה תחומים, עם מינימום זמן תגובה ומקסימום יעילות.</p>
+      <h2 class="title" data-reveal="mask" data-i18n="services.title">השמה לכל תחום מקצועי</h2>
+      <p class="sub" data-reveal="rise" data-i18n="services.sub">פתרונות גיוס מקצועיים בשישה תחומים, עם מינימום זמן תגובה ומקסימום יעילות.</p>
     </header>
 
     <div class="svc-grid" data-reveal-stagger>
       <article class="svc">
         <div class="svc-idx">01</div>
-        <h3>מקצועות טכניים</h3>
+        <h3 data-i18n="svc1.h">מקצועות טכניים</h3>
         <ul>
-          <li>מהנדסים והנדסאים</li>
-          <li>אלקטרונאים וחשמלאים</li>
-          <li>אבטחת איכות</li>
-          <li>טכנאים ומפעילי מכונות</li>
-          <li>ראשי צוותים ומנהלי משמרות</li>
+          <li data-i18n="svc1.l1">מהנדסים והנדסאים</li>
+          <li data-i18n="svc1.l2">אלקטרונאים וחשמלאים</li>
+          <li data-i18n="svc1.l3">אבטחת איכות</li>
+          <li data-i18n="svc1.l4">טכנאים ומפעילי מכונות</li>
+          <li data-i18n="svc1.l5">ראשי צוותים ומנהלי משמרות</li>
         </ul>
       </article>
       <article class="svc">
         <div class="svc-idx">02</div>
-        <h3>מחשוב ותוכנה</h3>
+        <h3 data-i18n="svc2.h">מחשוב ותוכנה</h3>
         <ul>
-          <li>מתכנתים ובודקי תוכנה</li>
-          <li>מהנדסי תוכנה וחומרה</li>
-          <li>טכנאים ומנהלי פרויקטים</li>
-          <li>ראשי צוותי פיתוח</li>
+          <li data-i18n="svc2.l1">מתכנתים ובודקי תוכנה</li>
+          <li data-i18n="svc2.l2">מהנדסי תוכנה וחומרה</li>
+          <li data-i18n="svc2.l3">טכנאים ומנהלי פרויקטים</li>
+          <li data-i18n="svc2.l4">ראשי צוותי פיתוח</li>
         </ul>
       </article>
       <article class="svc">
         <div class="svc-idx">03</div>
-        <h3>משרד ואדמיניסטרציה</h3>
+        <h3 data-i18n="svc3.h">משרד ואדמיניסטרציה</h3>
         <ul>
-          <li>מזכירות ופקידות</li>
-          <li>הנהלת חשבונות</li>
-          <li>קלדניות</li>
-          <li>כל מקצועות המשרד</li>
+          <li data-i18n="svc3.l1">מזכירות ופקידות</li>
+          <li data-i18n="svc3.l2">הנהלת חשבונות</li>
+          <li data-i18n="svc3.l3">קלדניות</li>
+          <li data-i18n="svc3.l4">כל מקצועות המשרד</li>
         </ul>
       </article>
       <article class="svc">
         <div class="svc-idx">04</div>
-        <h3>מכירות ושיווק</h3>
+        <h3 data-i18n="svc4.h">מכירות ושיווק</h3>
         <ul>
-          <li>מנהלי שיווק</li>
-          <li>סוכנים ומקדמי מכירות</li>
-          <li>טלמרקטינג</li>
+          <li data-i18n="svc4.l1">מנהלי שיווק</li>
+          <li data-i18n="svc4.l2">סוכנים ומקדמי מכירות</li>
+          <li data-i18n="svc4.l3">טלמרקטינג</li>
         </ul>
       </article>
       <article class="svc">
         <div class="svc-idx">05</div>
-        <h3>אקדמאים</h3>
+        <h3 data-i18n="svc5.h">אקדמאים</h3>
         <ul>
-          <li>כלכלה, תעשייה וניהול</li>
-          <li>כימיה וביולוגיה</li>
-          <li>תפקידי ניהול בכיר</li>
+          <li data-i18n="svc5.l1">כלכלה, תעשייה וניהול</li>
+          <li data-i18n="svc5.l2">כימיה וביולוגיה</li>
+          <li data-i18n="svc5.l3">תפקידי ניהול בכיר</li>
         </ul>
       </article>
       <article class="svc">
         <div class="svc-idx">06</div>
-        <h3>שירותים ואחזקה</h3>
+        <h3 data-i18n="svc6.h">שירותים ואחזקה</h3>
         <ul>
-          <li>אחזקת בניין ותעשייה</li>
-          <li>שירותי תחזוקה שוטפת</li>
-          <li>כוח אדם לשטח</li>
+          <li data-i18n="svc6.l1">אחזקת בניין ותעשייה</li>
+          <li data-i18n="svc6.l2">שירותי תחזוקה שוטפת</li>
+          <li data-i18n="svc6.l3">כוח אדם לשטח</li>
         </ul>
       </article>
     </div>
@@ -288,36 +291,36 @@
 <section class="sec process" id="process">
   <div class="container">
     <header class="sec-head">
-      <div class="kicker" data-reveal="rise"><span class="k-idx">03</span><span class="k-rule"></span><span>איך זה עובד</span></div>
-      <h2 class="title" data-reveal="mask">התהליך שלנו, צעד אחר צעד</h2>
-      <p class="sub" data-reveal="rise">מהפנייה הראשונה ועד ההשמה המוצלחת, ליווי מקצועי בכל שלב.</p>
+      <div class="kicker" data-reveal="rise"><span class="k-idx">03</span><span class="k-rule"></span><span data-i18n="process.kicker">איך זה עובד</span></div>
+      <h2 class="title" data-reveal="mask" data-i18n="process.title">התהליך שלנו, צעד אחר צעד</h2>
+      <p class="sub" data-reveal="rise" data-i18n="process.sub">מהפנייה הראשונה ועד ההשמה המוצלחת, ליווי מקצועי בכל שלב.</p>
     </header>
 
     <div class="proc-wrap">
       <div class="proc-line"><span class="fill"></span></div>
       <div class="proc-step">
         <div class="proc-node">01</div>
-        <div class="proc-body"><h3>איתור</h3><p>שאיבת מועמדים ממאגר נתונים גדול ואיכותי המתעדכן מדי יום, בהתאמה מדויקת לדרישות התפקיד.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc1.h">איתור</h3><p data-i18n="proc1.p">שאיבת מועמדים ממאגר נתונים גדול ואיכותי המתעדכן מדי יום, בהתאמה מדויקת לדרישות התפקיד.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">02</div>
-        <div class="proc-body"><h3>גיוס</h3><p>פנייה יזומה ומקצועית למועמדים הרלוונטיים, תוך מינימום זמן תגובה ומקסימום יעילות.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc2.h">גיוס</h3><p data-i18n="proc2.p">פנייה יזומה ומקצועית למועמדים הרלוונטיים, תוך מינימום זמן תגובה ומקסימום יעילות.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">03</div>
-        <div class="proc-body"><h3>מיון</h3><p>סינון קפדני של המועמדים על פי ניסיון, כישורים והתאמה תרבותית למקום העבודה.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc3.h">מיון</h3><p data-i18n="proc3.p">סינון קפדני של המועמדים על פי ניסיון, כישורים והתאמה תרבותית למקום העבודה.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">04</div>
-        <div class="proc-body"><h3>אבחון</h3><p>הערכה מעמיקה והתאמה אישית של המועמד לתפקיד, כדי להבטיח השמה שמחזיקה לאורך זמן.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc4.h">אבחון</h3><p data-i18n="proc4.p">הערכה מעמיקה והתאמה אישית של המועמד לתפקיד, כדי להבטיח השמה שמחזיקה לאורך זמן.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">05</div>
-        <div class="proc-body"><h3>יישום</h3><p>חיבור בין המועמד למעסיק, ליווי הקליטה והבטחת תחילת עבודה חלקה לשני הצדדים.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc5.h">יישום</h3><p data-i18n="proc5.p">חיבור בין המועמד למעסיק, ליווי הקליטה והבטחת תחילת עבודה חלקה לשני הצדדים.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">06</div>
-        <div class="proc-body"><h3>ליווי ומשוב</h3><p>משובים תקופתיים ושמירה על קשר רציף, כדי לוודא שביעות רצון מלאה לאורך זמן.</p></div>
+        <div class="proc-body"><h3 data-i18n="proc6.h">ליווי ומשוב</h3><p data-i18n="proc6.p">משובים תקופתיים ושמירה על קשר רציף, כדי לוודא שביעות רצון מלאה לאורך זמן.</p></div>
       </div>
     </div>
   </div>
@@ -327,23 +330,23 @@
 <section class="sec" id="why">
   <div class="container">
     <header class="sec-head">
-      <h2 class="title" data-reveal="mask">היתרון של Job Power</h2>
+      <h2 class="title" data-reveal="mask" data-i18n="why.title">היתרון של Job Power</h2>
     </header>
 
     <div class="why-grid" data-reveal-stagger>
-      <article class="wcard"><div class="wcard-idx">01</div><h3>חיסכון בזמן ובכסף</h3><p>חיסכון זמן יקר בגיוס וסינון מועמדים, וחיסכון בפרסום מודעות דרושים.</p></article>
-      <article class="wcard"><div class="wcard-idx">02</div><h3>מועמדים מתאימים</h3><p>איתור מקצועי תוך מינימום זמן תגובה ומקסימום יעילות, אדיבות והבנה.</p></article>
-      <article class="wcard"><div class="wcard-idx">03</div><h3>טיפול אישי</h3><p>ליווי צמוד לאורך כל התהליך, עבור המעסיקים וגם עבור המועמדים.</p></article>
-      <article class="wcard"><div class="wcard-idx">04</div><h3>מאגר מתעדכן יומי</h3><p>מאגר נתונים גדול ואיכותי המתעדכן מדי יום לכל דרישה ולכל תחום.</p></article>
-      <article class="wcard"><div class="wcard-idx">05</div><h3>משוב תקופתי</h3><p>מקיימים משובים שוטפים כדי לוודא שביעות רצון מלאה לאורך זמן.</p></article>
-      <article class="wcard"><div class="wcard-idx">06</div><h3>ניסיון של 15+ שנה</h3><p>מאז 2010, ניסיון עשיר בהשמות מוצלחות בענפים מגוונים ברחבי הארץ.</p></article>
+      <article class="wcard"><div class="wcard-idx">01</div><h3 data-i18n="why1.h">חיסכון בזמן ובכסף</h3><p data-i18n="why1.p">חיסכון זמן יקר בגיוס וסינון מועמדים, וחיסכון בפרסום מודעות דרושים.</p></article>
+      <article class="wcard"><div class="wcard-idx">02</div><h3 data-i18n="why2.h">מועמדים מתאימים</h3><p data-i18n="why2.p">איתור מקצועי תוך מינימום זמן תגובה ומקסימום יעילות, אדיבות והבנה.</p></article>
+      <article class="wcard"><div class="wcard-idx">03</div><h3 data-i18n="why3.h">טיפול אישי</h3><p data-i18n="why3.p">ליווי צמוד לאורך כל התהליך, עבור המעסיקים וגם עבור המועמדים.</p></article>
+      <article class="wcard"><div class="wcard-idx">04</div><h3 data-i18n="why4.h">מאגר מתעדכן יומי</h3><p data-i18n="why4.p">מאגר נתונים גדול ואיכותי המתעדכן מדי יום לכל דרישה ולכל תחום.</p></article>
+      <article class="wcard"><div class="wcard-idx">05</div><h3 data-i18n="why5.h">משוב תקופתי</h3><p data-i18n="why5.p">מקיימים משובים שוטפים כדי לוודא שביעות רצון מלאה לאורך זמן.</p></article>
+      <article class="wcard"><div class="wcard-idx">06</div><h3 data-i18n="why6.h">ניסיון של 15+ שנה</h3><p data-i18n="why6.p">מאז 2010, ניסיון עשיר בהשמות מוצלחות בענפים מגוונים ברחבי הארץ.</p></article>
     </div>
 
     <div class="hours" data-reveal-stagger>
-      <div class="hours-item"><div class="hours-lbl">ימים א׳–ה׳</div><div class="hours-val">09:00 – 16:30</div></div>
-      <div class="hours-item"><div class="hours-lbl">יום שישי</div><div class="hours-val">09:00 – 12:00 (בתיאום)</div></div>
-      <div class="hours-item"><div class="hours-lbl">כתובת</div><div class="hours-val">הלל יפה 20, חדרה</div></div>
-      <div class="hours-item"><div class="hours-lbl">שפות שירות</div><div class="hours-val">עברית · English · Русский</div></div>
+      <div class="hours-item"><div class="hours-lbl" data-i18n="hours.weekLbl">ימים א׳–ה׳</div><div class="hours-val">09:00 – 16:30</div></div>
+      <div class="hours-item"><div class="hours-lbl" data-i18n="hours.friLbl">יום שישי</div><div class="hours-val" data-i18n="hours.friVal">09:00 – 12:00 (בתיאום)</div></div>
+      <div class="hours-item"><div class="hours-lbl" data-i18n="hours.addrLbl">כתובת</div><div class="hours-val" data-i18n="hours.addrVal">הלל יפה 20, חדרה</div></div>
+      <div class="hours-item"><div class="hours-lbl" data-i18n="hours.langLbl">שפות שירות</div><div class="hours-val" data-i18n="hours.langVal">עברית · English · Русский</div></div>
     </div>
   </div>
 </section>
@@ -360,8 +363,8 @@
     </symbol></svg>
 
     <header class="sec-head">
-      <h2 class="title big" data-reveal="mask">מה הלקוחות שלנו <em>אומרים</em></h2>
-      <p class="sub" data-reveal="rise">חמישה כוכבים ומילים מהלב, ממי שכבר מצא את מקומו, או את העובדים שלו, דרך Job Power.</p>
+      <h2 class="title big" data-reveal="mask" data-i18n-html="reviews.title">מה הלקוחות שלנו <em>אומרים</em></h2>
+      <p class="sub" data-reveal="rise" data-i18n="reviews.sub">חמישה כוכבים ומילים מהלב, ממי שכבר מצא את מקומו, או את העובדים שלו, דרך Job Power.</p>
     </header>
 
     <!-- testimonials wall -->
@@ -369,8 +372,8 @@
       <div class="tCol" data-dir="up">
         <div class="tColInner">
           <article class="tcard">
-            <div class="tcard-stars" aria-label="5 כוכבים">★★★★★</div>
-            <p class="tcard-text">פנו אליי אחרי שהשארתי קורות חיים עם משרה רלוונטית, התקשרו עם כמה משרות והתקשרו לבדוק איך זה לאחר כל ראיון וניסו לקדם אותי בתהליך. באמת שירות מעולה שלא קיבלתי אצל אף חברה אחרת.</p>
+            <div class="tcard-stars" data-i18n-attr="aria-label:reviews.starsAria" aria-label="5 כוכבים">★★★★★</div>
+            <p class="tcard-text" data-i18n="t1.text">פנו אליי אחרי שהשארתי קורות חיים עם משרה רלוונטית, התקשרו עם כמה משרות והתקשרו לבדוק איך זה לאחר כל ראיון וניסו לקדם אותי בתהליך. באמת שירות מעולה שלא קיבלתי אצל אף חברה אחרת.</p>
             <div class="tcard-by">
               <span class="tcard-av" style="--av:#5d6b8a">N</span>
               <div class="tcard-id"><span class="tcard-name">Nevo Levi</span></div>
@@ -378,8 +381,8 @@
             </div>
           </article>
           <article class="tcard">
-            <div class="tcard-stars" aria-label="5 כוכבים">★★★★★</div>
-            <p class="tcard-text">רוצה להודות מכל הלב לחברת ג'וב פאוור על השירות המקצועי, האכפתי והמהיר. שלחתי את קורות החיים שלי, ובתוך זמן קצר קיבלתי הצעה לעבודה שמתאימה בדיוק למה שחיפשתי. היחס האישי, הזמינות, ההדרכה וההכנה פשוט יוצאים מן הכלל. תודה רבה לכם על הליווי והתמיכה לאורך הדרך – ממליץ בחום!</p>
+            <div class="tcard-stars" data-i18n-attr="aria-label:reviews.starsAria" aria-label="5 כוכבים">★★★★★</div>
+            <p class="tcard-text" data-i18n="t2.text">רוצה להודות מכל הלב לחברת ג'וב פאוור על השירות המקצועי, האכפתי והמהיר. שלחתי את קורות החיים שלי, ובתוך זמן קצר קיבלתי הצעה לעבודה שמתאימה בדיוק למה שחיפשתי. היחס האישי, הזמינות, ההדרכה וההכנה פשוט יוצאים מן הכלל. תודה רבה לכם על הליווי והתמיכה לאורך הדרך – ממליץ בחום!</p>
             <div class="tcard-by">
               <span class="tcard-av" style="--av:#b65b3c">R</span>
               <div class="tcard-id"><span class="tcard-name">Ronen Shaknay</span></div>
@@ -387,8 +390,8 @@
             </div>
           </article>
           <article class="tcard">
-            <div class="tcard-stars" aria-label="5 כוכבים">★★★★★</div>
-            <p class="tcard-text">חברת השמה מקצועית, קשובה ואכפתית שליוותה אותי לאורך כל התהליך. ההתאמה למשרה הייתה מדויקת והרגשתי שיש מי שבאמת דואג לאינטרסים שלי. ממליצה בחום.</p>
+            <div class="tcard-stars" data-i18n-attr="aria-label:reviews.starsAria" aria-label="5 כוכבים">★★★★★</div>
+            <p class="tcard-text" data-i18n="t3.text">חברת השמה מקצועית, קשובה ואכפתית שליוותה אותי לאורך כל התהליך. ההתאמה למשרה הייתה מדויקת והרגשתי שיש מי שבאמת דואג לאינטרסים שלי. ממליצה בחום.</p>
             <div class="tcard-by">
               <span class="tcard-av" style="--av:#7b3fb0">M</span>
               <div class="tcard-id"><span class="tcard-name">Michal Hauzner-Montal</span></div>
@@ -401,20 +404,20 @@
       <div class="tCol" data-dir="down">
         <div class="tColInner">
           <article class="tcard">
-            <div class="tcard-stars" aria-label="5 כוכבים">★★★★★</div>
-            <p class="tcard-text">ברצוני להודות ולהביע הערכה רבה לחברת ההשמה שליוותה אותי לאורך הדרך במקצועיות, אכפתיות וסבלנות. מהרגע הראשון הרגשתי שיש מי שמקשיב לי באמת, מבין את הצרכים שלי, ונותן מענה אמיתי ומדויק. הליווי היה רציף, ברור ומכבד, עם זמינות גבוהה ויחס אישי עד למציאת מקום עבודה שמתאים לי. לאורך כל התהליך הרגשתי שאני לא לבד, ושיש מי שמאמין בי ודוחף אותי קדימה. אין ספק שמדובר בחברה רצינית, אנושית ומקצועית, ואני ממליץ עליה בחום לכל מי שמחפש ליווי אמיתי בדרך למציאת עבודה. תודה רבה על הכל.</p>
+            <div class="tcard-stars" data-i18n-attr="aria-label:reviews.starsAria" aria-label="5 כוכבים">★★★★★</div>
+            <p class="tcard-text" data-i18n="t4.text">ברצוני להודות ולהביע הערכה רבה לחברת ההשמה שליוותה אותי לאורך הדרך במקצועיות, אכפתיות וסבלנות. מהרגע הראשון הרגשתי שיש מי שמקשיב לי באמת, מבין את הצרכים שלי, ונותן מענה אמיתי ומדויק. הליווי היה רציף, ברור ומכבד, עם זמינות גבוהה ויחס אישי עד למציאת מקום עבודה שמתאים לי. לאורך כל התהליך הרגשתי שאני לא לבד, ושיש מי שמאמין בי ודוחף אותי קדימה. אין ספק שמדובר בחברה רצינית, אנושית ומקצועית, ואני ממליץ עליה בחום לכל מי שמחפש ליווי אמיתי בדרך למציאת עבודה. תודה רבה על הכל.</p>
             <div class="tcard-by">
               <span class="tcard-av" style="--av:#1a8a6d">ש</span>
-              <div class="tcard-id"><span class="tcard-name">שלמה טשומה</span></div>
+              <div class="tcard-id"><span class="tcard-name" data-i18n="t4.name">שלמה טשומה</span></div>
               <svg class="tcard-g" aria-label="Google"><use href="#gIcon"/></svg>
             </div>
           </article>
           <article class="tcard">
-            <div class="tcard-stars" aria-label="5 כוכבים">★★★★★</div>
-            <p class="tcard-text">אני לקוח של משרד ההשמה ונעזר בהם לגיוס עובדים. צוות המשרד מקצועי, יעיל, מהיר ואדיב.</p>
+            <div class="tcard-stars" data-i18n-attr="aria-label:reviews.starsAria" aria-label="5 כוכבים">★★★★★</div>
+            <p class="tcard-text" data-i18n="t5.text">אני לקוח של משרד ההשמה ונעזר בהם לגיוס עובדים. צוות המשרד מקצועי, יעיל, מהיר ואדיב.</p>
             <div class="tcard-by">
               <span class="tcard-av" style="--av:#3f6fae">ש</span>
-              <div class="tcard-id"><span class="tcard-name">שאול פור</span><span class="tcard-role">מנהל תפעול · כסלו תחבורה בע״מ</span></div>
+              <div class="tcard-id"><span class="tcard-name" data-i18n="t5.name">שאול פור</span><span class="tcard-role" data-i18n="t5.role">מנהל תפעול · כסלו תחבורה בע״מ</span></div>
               <svg class="tcard-g" aria-label="Google"><use href="#gIcon"/></svg>
             </div>
           </article>
@@ -423,24 +426,24 @@
     </div>
 
     <!-- rate-us CTA -->
-    <h3 class="review-cta-title" data-reveal="rise">נהניתם מהשירות? נשמח גם לכוכבים שלכם ⭐</h3>
+    <h3 class="review-cta-title" data-reveal="rise" data-i18n="reviews.ctaTitle">נהניתם מהשירות? נשמח גם לכוכבים שלכם ⭐</h3>
     <div class="review-card" data-reveal="rise">
       <div class="review-head">
         <svg class="g-logo" aria-hidden="true"><use href="#gIcon"/></svg>
-        <span>ביקורת ב-Google</span>
+        <span data-i18n="reviews.head">ביקורת ב-Google</span>
       </div>
 
-      <div class="stars" id="stars" role="group" aria-label="בחירת דירוג">
-        <button class="star" type="button" data-v="1" aria-label="1 כוכבים"></button>
-        <button class="star" type="button" data-v="2" aria-label="2 כוכבים"></button>
-        <button class="star" type="button" data-v="3" aria-label="3 כוכבים"></button>
-        <button class="star" type="button" data-v="4" aria-label="4 כוכבים"></button>
-        <button class="star" type="button" data-v="5" aria-label="5 כוכבים"></button>
+      <div class="stars" id="stars" role="group" data-i18n-attr="aria-label:reviews.pickAria" aria-label="בחירת דירוג">
+        <button class="star" type="button" data-v="1" data-i18n-attr="aria-label:reviews.star1" aria-label="1 כוכבים"></button>
+        <button class="star" type="button" data-v="2" data-i18n-attr="aria-label:reviews.star2" aria-label="2 כוכבים"></button>
+        <button class="star" type="button" data-v="3" data-i18n-attr="aria-label:reviews.star3" aria-label="3 כוכבים"></button>
+        <button class="star" type="button" data-v="4" data-i18n-attr="aria-label:reviews.star4" aria-label="4 כוכבים"></button>
+        <button class="star" type="button" data-v="5" data-i18n-attr="aria-label:reviews.star5" aria-label="5 כוכבים"></button>
       </div>
 
-      <p class="stars-hint" id="starsHint">בחרו דירוג כדי להמשיך</p>
+      <p class="stars-hint" id="starsHint" data-i18n="reviews.hint">בחרו דירוג כדי להמשיך</p>
 
-      <a class="btn btn-primary review-go" id="reviewGo" href="https://g.page/r/CU87GRVEWCRuEBM/review" target="_blank" rel="noopener" data-magnetic="0.25">
+      <a class="btn btn-primary review-go" id="reviewGo" href="https://g.page/r/CU87GRVEWCRuEBM/review" target="_blank" rel="noopener" data-magnetic="0.25" data-i18n="reviews.go">
         כתבו ביקורת ב-Google
       </a>
     </div>
@@ -451,34 +454,34 @@
 <section class="sec contact" id="contact">
   <div class="container">
     <header class="sec-head">
-      <h2 class="title big" data-reveal="mask">בואו נמצא לכם<br>את <em>האנשים הנכונים</em></h2>
-      <p class="sub" data-reveal="rise">מחפשים עבודה? צריכים לגייס? אנחנו כאן. דברו איתנו עוד היום.</p>
+      <h2 class="title big" data-reveal="mask" data-i18n-html="contact.title">בואו נמצא לכם<br>את <em>האנשים הנכונים</em></h2>
+      <p class="sub" data-reveal="rise" data-i18n="contact.sub">מחפשים עבודה? צריכים לגייס? אנחנו כאן. דברו איתנו עוד היום.</p>
     </header>
 
     <div class="contact-rows" data-reveal-stagger>
       <a class="crow" href="tel:077-5337080">
-        <span class="crow-lbl">טלפון</span>
+        <span class="crow-lbl" data-i18n="contact.phone">טלפון</span>
         <span class="crow-val">077-533-7080</span>
         <span class="crow-arr">↙</span>
       </a>
       <a class="crow" href="tel:054-7715040">
-        <span class="crow-lbl">נייד</span>
+        <span class="crow-lbl" data-i18n="contact.mobile">נייד</span>
         <span class="crow-val">054-771-5040</span>
         <span class="crow-arr">↙</span>
       </a>
       <a class="crow" href="mailto:job@jobpower.co.il">
-        <span class="crow-lbl">דוא"ל</span>
+        <span class="crow-lbl" data-i18n="contact.email">דוא"ל</span>
         <span class="crow-val">job@jobpower.co.il</span>
         <span class="crow-arr">↙</span>
       </a>
       <a class="crow" href="https://maps.google.com/maps?q=הלל+יפה+20+חדרה" target="_blank" rel="noopener">
-        <span class="crow-lbl">כתובת</span>
-        <span class="crow-val">הלל יפה 20, חדרה</span>
+        <span class="crow-lbl" data-i18n="contact.address">כתובת</span>
+        <span class="crow-val" data-i18n="contact.addressVal">הלל יפה 20, חדרה</span>
         <span class="crow-arr">↙</span>
       </a>
     </div>
 
-    <a href="https://wa.me/972547715040" target="_blank" rel="noopener" class="btn btn-wa btn-lg wa-big" data-reveal="rise" data-magnetic="0.25">
+    <a href="https://wa.me/972547715040" target="_blank" rel="noopener" class="btn btn-wa btn-lg wa-big" data-reveal="rise" data-magnetic="0.25" data-i18n="contact.wa">
       שלחו הודעה ב-WhatsApp
     </a>
   </div>
@@ -493,22 +496,22 @@
         <b>Job Power HR</b>
       </a>
       <ul class="foot-links">
-        <li><a href="#about">אודותינו</a></li>
-        <li><a href="#services">שירותים</a></li>
-        <li><a href="#process">התהליך</a></li>
-        <li><a href="#why">למה אנחנו</a></li>
-        <li><a href="#reviews">המלצות</a></li>
-        <li><a href="#contact">צור קשר</a></li>
+        <li><a href="#about" data-i18n="nav.about">אודותינו</a></li>
+        <li><a href="#services" data-i18n="nav.services">שירותים</a></li>
+        <li><a href="#process" data-i18n="nav.process">התהליך</a></li>
+        <li><a href="#why" data-i18n="nav.why">למה אנחנו</a></li>
+        <li><a href="#reviews" data-i18n="nav.reviews">המלצות</a></li>
+        <li><a href="#contact" data-i18n="nav.cta">צור קשר</a></li>
       </ul>
     </div>
     <div class="foot-bottom">
-      <div>© 2026 Job Power HR · חדרה · כל הזכויות שמורות</div>
-      <div class="made">עוצב ונבנה על ידי <a href="https://elevatecreative.github.io/Elevate/" target="_blank" rel="noopener" class="elevate"><b>Elevate Creative</b></a></div>
+      <div data-i18n="footer.rights">© 2026 Job Power HR · חדרה · כל הזכויות שמורות</div>
+      <div class="made" data-i18n-html="footer.made">עוצב ונבנה על ידי <a href="https://elevatecreative.github.io/Elevate/" target="_blank" rel="noopener" class="elevate"><b>Elevate Creative</b></a></div>
     </div>
   </div>
 </footer>
 
-<a class="totop" href="#top" aria-label="חזרה למעלה">↑</a>
+<a class="totop" href="#top" data-i18n-attr="aria-label:nav.topAria" aria-label="חזרה למעלה">↑</a>
 
 <!-- ===== SCRIPTS =====
      defer, so none of these hold up the parser: they download in parallel while the
@@ -517,11 +520,17 @@
      hls.light.min.js is NOT here on purpose — 296 KB, larger than everything else put
      together, and needed only by browsers with no native HLS. Safari and iOS never use
      it. main.js now fetches it on demand, after first paint, and only if the browser
-     actually cannot play the stream by itself. -->
+     actually cannot play the stream by itself.
+
+     i18n.js is the one exception to the defer rule: it sets the lang and dir attributes
+     from localStorage before the parser reaches the body, so a returning Russian visitor
+     never watches the page lay itself out right-to-left and then flip. It is small and
+     does no DOM work at that point. -->
+<script src="assets/js/i18n.js?v=2"></script>
 <script defer src="assets/vendor/gsap.min.js"></script>
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
-<script defer src="assets/js/a11y.js"></script>
-<script defer src="assets/js/main.js?v=24"></script>
+<script defer src="assets/js/a11y.js?v=3"></script>
+<script defer src="assets/js/main.js?v=25"></script>
 </body>
 </html>

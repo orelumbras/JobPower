@@ -526,7 +526,12 @@
         opening = true;
         stars.forEach((x, i) => x.classList.toggle('on', i < v));
         paint(0, 'hot');
-        if (hint) { hint.textContent = 'תודה על הדירוג! מעבירים אתכם ל-Google…'; hint.classList.add('thanks'); }
+        // the one string on the page with no element to hang a key on until it is needed
+        if (hint) {
+          hint.textContent = (window.JPI18N && window.JPI18N.t('reviews.thanks')) ||
+            'תודה על הדירוג! מעבירים אתכם ל-Google…';
+          hint.classList.add('thanks');
+        }
         setTimeout(() => { window.open(GOOGLE_REVIEW_URL, '_blank', 'noopener'); opening = false; }, 650);
       });
     });
