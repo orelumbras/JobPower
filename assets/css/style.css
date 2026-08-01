@@ -217,33 +217,52 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 }
 
 /* ====================================================================
-   HERO — SPLIT SCREEN
+   HERO — DIAGONAL SPLIT
    Two routes, one decision. The diagonal is the whole point: a vertical divider reads as
    a table of two equal columns, whereas the cut commits the page to a direction and
    gives the eye somewhere to travel. Each half is a single link, so on touch the whole
    panel is the target; hovering one takes territory from the other.
+
+   The split spans the entire hero, title included. It used to be a separate band stacked
+   under the title, which meant the two coloured fields began on a hard horizontal line
+   across the page — a join nothing in the design accounted for, and the single biggest
+   reason the hero read as unfinished.
    ==================================================================== */
-.hero{position:relative;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto;
-  padding:calc(var(--nav-h) + 18px) 0 0;overflow:hidden}
+.hero{position:relative;min-height:100svh;display:grid;grid-template-columns:1fr;
+  overflow:hidden;isolation:isolate}
 
-.hero-title{display:flex;flex-direction:column;gap:.35rem;align-items:center;text-align:center;
-  padding-inline:var(--pad);margin-bottom:clamp(.8rem,2.5vh,1.6rem)}
-.ht-mark{font-weight:900;letter-spacing:-.02em;font-size:clamp(1.5rem,3.4vw,2.3rem);color:#fff}
-.ht-sub{font-size:.78rem;letter-spacing:.14em;color:var(--text-soft)}
+/* The cut, as two numbers: where it meets the top edge and where it meets the bottom.
+   The panel clip, the seam light and the hover states all derive from this one pair, so
+   the edge, its glow and the colour boundary can never fall out of register. */
+.hero-split{grid-area:1/1;position:relative;display:grid;min-height:0;
+  --cut-t:61%;--cut-b:39%}
 
-.hero-split{position:relative;display:grid;min-height:0}
-/* both halves fill the same cell; the clip decides who owns what */
-.sh{grid-area:1/1;position:relative;display:flex;align-items:center;overflow:hidden;
-  padding:clamp(1.5rem,4vh,3rem) var(--pad);color:inherit;
-  transition:clip-path .55s var(--ease)}
+/* the title floats over the seam: it belongs to both sides, not to one of them */
+.hero-title{grid-area:1/1;z-index:5;align-self:start;justify-self:center;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:clamp(.55rem,1.4vh,.95rem);
+  text-align:center;padding:calc(var(--nav-h) + clamp(2rem,7vh,4.2rem)) var(--pad) 0}
+.ht-mark{font-weight:900;letter-spacing:-.03em;line-height:.95;color:#fff;
+  font-size:clamp(2.5rem,7.2vw,5.2rem);text-shadow:0 14px 48px rgba(6,5,13,.55)}
+.ht-rule{width:clamp(52px,9vw,104px);height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.62),transparent)}
+.ht-sub{font-size:clamp(.72rem,1.4vw,.86rem);letter-spacing:.22em;font-weight:500;
+  color:rgba(245,242,255,.82);text-shadow:0 2px 18px rgba(6,5,13,.7)}
+
+/* Both halves fill the same cell and the copy sits low, clear of the title. Only the top
+   panel is clipped — the one underneath stays a full rectangle, so no hairline of page
+   background can show through where two clip edges would otherwise meet. */
+/* the bottom padding is sized against the dissolve below, not by eye: any less and the
+   buttons sit inside the fade and lose their lower third to it */
+.sh{grid-area:1/1;position:relative;display:flex;align-items:flex-end;overflow:hidden;color:inherit;
+  padding:calc(var(--nav-h) + clamp(9rem,27vh,15rem)) var(--pad) clamp(4.5rem,11vh,7.5rem)}
 .sh-body{position:relative;z-index:2;display:flex;flex-direction:column;align-items:flex-start;
-  gap:clamp(.5rem,1.3vh,.9rem);max-width:34ch}
+  gap:clamp(.5rem,1.3vh,.9rem);max-width:32ch}
 .sh-kicker{font-family:var(--font-lat);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
   color:#fff;padding:.3rem .7rem;border:1px solid rgba(255,255,255,.34);border-radius:999px}
-.sh-head{font-weight:900;line-height:1.02;letter-spacing:-.02em;color:#fff;
-  font-size:clamp(1.7rem,3.6vw,3.1rem)}
+.sh-head{font-weight:900;line-height:1.04;letter-spacing:-.02em;color:#fff;
+  font-size:clamp(1.65rem,3.3vw,2.8rem)}
 /* brightened deliberately: --text-mute sat too close to the field to read at a glance */
-.sh-line{color:#e6e1f5;font-weight:300;font-size:clamp(.95rem,1.4vw,1.1rem);max-width:38ch}
+.sh-line{color:#e6e1f5;font-weight:300;font-size:clamp(.95rem,1.3vw,1.06rem);max-width:36ch}
 .sh-cta{margin-top:.5rem;display:inline-flex;align-items:center;gap:.55rem;
   padding:.85rem 1.7rem;border-radius:999px;font-weight:700;font-size:1rem;color:#fff;
   background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.05) 42%,transparent 64%),
@@ -255,46 +274,95 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .sh-cta i{font-style:normal;transition:transform .35s var(--ease)}
 .sh:hover .sh-cta{transform:translateY(-2px)}
 .sh:hover .sh-cta i{transform:translateX(-5px)}
-/* the colour each side owns */
-.sh-glow{position:absolute;inset:0;z-index:0;opacity:.9;transition:opacity .55s var(--ease)}
+
+/* The colour each side owns. Both radials are centred on the cut's midpoint, so each
+   panel is brightest where it meets the other and falls away toward its outer edge —
+   which is also where the copy sits, so the type gains contrast as a side effect. */
+.sh-glow{position:absolute;inset:0;z-index:0;transition:opacity .55s var(--ease)}
+.sh--seek{--sh-cta:rgba(124,92,224,.62);z-index:2;justify-content:flex-start;
+  clip-path:polygon(100% 0,100% 100%,var(--cut-b) 100%,var(--cut-t) 0);
+  transition:clip-path .6s var(--ease)}
+.sh--seek .sh-glow{opacity:.94;background:
+  radial-gradient(78% 68% at 50% 50%,rgba(167,124,255,.62),rgba(96,52,205,.26) 46%,transparent 74%),
+  linear-gradient(215deg,rgba(84,40,190,.5),rgba(9,6,26,.62) 72%)}
+.sh--hire{--sh-cta:rgba(40,108,224,.62);z-index:1;justify-content:flex-end}
+.sh--hire .sh-glow{opacity:.94;background:
+  radial-gradient(78% 68% at 50% 50%,rgba(72,148,255,.58),rgba(22,68,190,.26) 46%,transparent 74%),
+  linear-gradient(145deg,rgba(16,58,155,.54),rgba(5,9,30,.62) 72%)}
 .sh:hover .sh-glow{opacity:1}
 
-.sh--seek{--sh-cta:rgba(124,92,224,.6);z-index:2;justify-content:flex-start;
-  clip-path:polygon(100% 0,100% 100%,42% 100%,58% 0)}
-.sh--seek .sh-glow{background:
-  radial-gradient(70% 90% at 78% 22%,rgba(139,92,246,.42),transparent 62%),
-  linear-gradient(200deg,rgba(67,33,160,.42),rgba(6,5,13,.2))}
-.sh--hire{--sh-cta:rgba(38,110,220,.6);z-index:1;justify-content:flex-end;
-  clip-path:polygon(0 0,58% 0,42% 100%,0 100%)}
-.sh--hire .sh-glow{background:
-  radial-gradient(70% 90% at 22% 26%,rgba(56,132,255,.40),transparent 62%),
-  linear-gradient(160deg,rgba(14,52,140,.44),rgba(6,5,13,.2))}
-/* the hovered side takes territory; :has drives the top layer so the cut stays one line */
-.hero-split:has(.sh--seek:hover) .sh--seek{clip-path:polygon(100% 0,100% 100%,20% 100%,36% 0)}
-.hero-split:has(.sh--hire:hover) .sh--seek{clip-path:polygon(100% 0,100% 100%,64% 100%,80% 0)}
+/* the hovered side takes territory; moving the pair moves the edge and its light together */
+.hero-split:has(.sh--seek:hover){--cut-t:51%;--cut-b:29%}
+.hero-split:has(.sh--hire:hover){--cut-t:71%;--cut-b:49%}
 
-.hero-scroll{display:inline-flex;align-items:center;gap:.7rem;justify-self:center;
-  padding:.9rem 0 1.1rem;font-size:.7rem;letter-spacing:.25em;color:var(--text-soft)}
-.hero-scroll .scroll-rule{width:34px;height:1px;background:linear-gradient(90deg,var(--v4),transparent);
-  animation:scrolldrop 1.8s var(--ease) infinite}
-/* the cue now lies flat, so it sweeps sideways rather than dropping */
-@keyframes scrolldrop{0%{transform:scaleX(0);transform-origin:right}50%{transform:scaleX(1);transform-origin:right}
-  50.1%{transform-origin:left}100%{transform:scaleX(0);transform-origin:left}}
+/* ---- the light along the cut ----
+   Above both panels, so the bloom spills onto each side of the seam rather than being
+   trimmed flat by the clip that draws it. Inside .hero-seam-bloom the band is clipped
+   first and the wrapper blurs the result afterwards; doing it the other way round (blur
+   on the clipped element) yields a hard-edged smudge, because clip-path is applied after
+   filter on the same box. */
+.hero-seam{grid-area:1/1;position:relative;z-index:3;pointer-events:none}
+.hero-seam-bloom{position:absolute;inset:0;filter:blur(11px);opacity:.72}
+.hero-seam-bloom::after,.hero-seam::after{content:'';position:absolute;inset:0;
+  transition:clip-path .6s var(--ease)}
+.hero-seam-bloom::after{
+  background:linear-gradient(180deg,rgba(196,168,255,0),rgba(196,168,255,.9) 24%,rgba(147,197,253,.9) 76%,rgba(147,197,253,0));
+  clip-path:polygon(calc(var(--cut-t) - 3px) 0,calc(var(--cut-t) + 3px) 0,calc(var(--cut-b) + 3px) 100%,calc(var(--cut-b) - 3px) 100%)}
+/* the hairline itself, fading out at both ends so it never stops on a blunt edge */
+.hero-seam::after{
+  background:linear-gradient(180deg,rgba(255,255,255,0),rgba(233,225,255,.95) 26%,rgba(191,219,254,.95) 74%,rgba(255,255,255,0));
+  clip-path:polygon(calc(var(--cut-t) - .75px) 0,calc(var(--cut-t) + .75px) 0,calc(var(--cut-b) + .75px) 100%,calc(var(--cut-b) - .75px) 100%)}
 
-/* Stacked, with the diagonal kept as the seam between the two blocks. The panels are
-   already links, so the whole block is the tap target. */
+/* the panels dissolve into the page instead of ending on a ruled line */
+.hero::after{content:'';position:absolute;inset-inline:0;bottom:0;z-index:4;pointer-events:none;
+  height:clamp(56px,9vh,110px);background:linear-gradient(180deg,transparent,var(--bg) 94%)}
+
+/* while the intro opens the cut the clip is being written every frame, so the hover
+   transition must stay out of the way or it spends the whole animation chasing it */
+.hero.is-intro .sh--seek,
+.hero.is-intro .hero-seam::after,
+.hero.is-intro .hero-seam-bloom::after{transition:none}
+
+/* ---- MOBILE ----
+   The diagonal stays; it just runs the other way. The panels stack, the cut becomes the
+   slanted edge between them, and --cut-drop is how far that edge falls from one side of
+   the screen to the other. The lower panel is pulled up by exactly the same amount, so
+   it fills the wedge the upper one gives away. */
 @media (max-width:860px){
-  .hero{min-height:0;padding-bottom:0}
-  .hero-split{grid-template-rows:1fr 1fr;min-height:78svh}
-  .sh{grid-area:auto;padding-block:clamp(1.8rem,5vh,3rem)}
-  .sh--seek{clip-path:polygon(0 0,100% 0,100% 88%,0 100%);z-index:2}
-  .sh--hire{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);margin-top:-6svh;
-    padding-top:calc(6svh + 1.8rem);z-index:1}
-  .hero-split:has(.sh--seek:hover) .sh--seek,
-  .hero-split:has(.sh--hire:hover) .sh--seek{clip-path:polygon(0 0,100% 0,100% 88%,0 100%)}
-  .sh-body{max-width:none}
+  .hero{--cut-drop:clamp(78px,24vw,150px);min-height:100svh}
+  .hero-split{grid-template-rows:auto auto;align-content:start}
+  .hero-title{padding-top:calc(var(--nav-h) + clamp(1.6rem,5.5vh,3rem))}
+  /* stacked, both blocks read off the same edge — the desktop rule pushes the employers'
+     side to the far left, which only makes sense while the two sit side by side */
+  .sh{grid-area:auto;align-items:flex-start;justify-content:flex-start;padding-inline:var(--pad)}
+  .sh-body{max-width:none;width:100%}
+
+  .sh--seek{clip-path:polygon(0 0,100% 0,100% calc(100% - var(--cut-drop)),0 100%);
+    padding-top:calc(var(--nav-h) + clamp(8.5rem,30vh,13rem));
+    padding-bottom:calc(var(--cut-drop) + clamp(1.4rem,4vh,2.4rem))}
+  .sh--seek .sh-glow{background:
+    radial-gradient(140% 62% at 50% 100%,rgba(167,124,255,.6),rgba(96,52,205,.24) 48%,transparent 78%),
+    linear-gradient(200deg,rgba(84,40,190,.46),rgba(9,6,26,.6) 70%)}
+
+  .sh--hire{margin-top:calc(-1 * var(--cut-drop));
+    padding-top:calc(var(--cut-drop) + clamp(2.2rem,6vh,3.4rem));
+    padding-bottom:clamp(3.4rem,9vh,5rem)}
+  .sh--hire .sh-glow{background:
+    radial-gradient(140% 62% at 50% var(--cut-drop),rgba(72,148,255,.56),rgba(22,68,190,.24) 48%,transparent 78%),
+    linear-gradient(160deg,rgba(16,58,155,.5),rgba(5,9,30,.6) 70%)}
+
+  /* the seam rides the upper panel here: its position depends on that panel's height,
+     which no percentage of the hero can express once the two stack */
+  .hero-seam{display:none}
+  .sh--seek::before,.sh--seek::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none}
+  .sh--seek::before{filter:blur(9px);opacity:.8;
+    background:linear-gradient(90deg,rgba(147,197,253,.95),rgba(196,168,255,.95));
+    clip-path:polygon(0 calc(100% - 5px),100% calc(100% - var(--cut-drop) - 5px),100% calc(100% - var(--cut-drop)),0 100%)}
+  .sh--seek::after{
+    background:linear-gradient(90deg,rgba(191,219,254,.95),rgba(233,225,255,.95));
+    clip-path:polygon(0 calc(100% - 1.5px),100% calc(100% - var(--cut-drop) - 1.5px),100% calc(100% - var(--cut-drop)),0 100%)}
 }
-@media (prefers-reduced-motion:reduce){.sh{transition:none}}
+@media (prefers-reduced-motion:reduce){.sh--seek{transition:none}}
 
 /* WhatsApp as a standing offer rather than a third button competing in the hero.
    Stacked with the other floating controls on the physical right, clear of the
@@ -308,33 +376,19 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 
 
 /* ====================================================================
-   MARQUEE
-   ==================================================================== */
-.marquee{position:relative;z-index:1;overflow:hidden;padding:24px 0;border-block:1px solid var(--line);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
-          mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.marquee-track{display:flex;width:max-content;will-change:transform;animation:marq 34s linear infinite}
-.marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-track span{display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;padding-inline:1.2rem;
-  font-family:var(--font-lat);font-weight:500;font-size:clamp(1rem,2vw,1.45rem);color:var(--text-mute);
-  -webkit-text-stroke:0}
-.marquee-track span i{font-style:normal;color:var(--v3)}
-@keyframes marq{to{transform:translateX(50%)}}
-
-/* ====================================================================
    STATS
    ==================================================================== */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-  margin:clamp(40px,5vw,64px) auto;border:1px solid var(--line);background:var(--line)}
-.stat{padding:2.2rem 1.4rem;text-align:center;background:var(--bg-2);backdrop-filter:blur(4px)}
+  margin:clamp(52px,7vw,92px) auto clamp(40px,5vw,64px);border:1px solid var(--line);background:var(--line)}
+.stat{padding:clamp(2rem,3.2vw,2.9rem) 1.4rem;text-align:center;background:var(--bg-2);backdrop-filter:blur(4px)}
 .stat-num{font-family:var(--font-lat);font-weight:700;font-size:clamp(2.3rem,4.8vw,3.4rem);line-height:1;letter-spacing:-.02em}
 .stat-label{margin-top:.6rem;color:var(--text-mute);font-size:.9rem;font-weight:500}
 
 /* ====================================================================
    SECTION SCAFFOLD
    ==================================================================== */
-.sec{padding:clamp(46px,7vh,86px) 0;position:relative;z-index:1}
-.sec-head{margin-bottom:clamp(44px,6vw,72px);max-width:820px}
+.sec{padding:clamp(62px,9vh,124px) 0;position:relative;z-index:1}
+.sec-head{margin-bottom:clamp(44px,6vw,76px);max-width:820px}
 .sec.contact .sec-head,.sec#why .sec-head,.sec#services .sec-head,.sec#process .sec-head{margin-inline:auto;text-align:center}
 .sec#services .sec-head,.sec#process .sec-head{max-width:760px}
 
@@ -346,6 +400,13 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .title{font-weight:800;line-height:1.06;letter-spacing:-.02em;font-size:clamp(2.1rem,5.2vw,3.9rem)}
 .title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .title.big{font-size:clamp(2.4rem,6.2vw,4.8rem)}
+/* One masked box per line, written by the script (see splitTitleLines). The padding and
+   the matching negative margin buy room for descenders without moving anything: without
+   it the mask crops the tail of every ק and ן on the last line. The transform lives on
+   .tl-i, an ancestor of any gradient <em>, never a descendant of one — moving a child of
+   a background-clip:text box slides the text out from under its own gradient. */
+.title .tl{display:block;overflow:hidden;padding-bottom:.18em;margin-bottom:-.18em}
+.title .tl-i{display:block}
 .sub{margin-top:1.1rem;color:var(--text-mute);font-size:clamp(1rem,1.6vw,1.15rem);max-width:620px}
 .sec#services .sub,.sec#process .sub,.sec.contact .sub{margin-inline:auto}
 
@@ -366,7 +427,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
    THE MATCH  —  the page's one scroll-driven set piece
    Two streams cross in opposite directions while the stage is pinned; the pair on the
    centre seam locks. Built entirely from language already in this file: hairline rules,
-   the marquee's edge mask, glass surfaces, the violet ramp.
+   fading edge masks, glass surfaces, the violet ramp.
    ==================================================================== */
 .match{padding:0}
 .match-stage{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
@@ -455,7 +516,8 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .svc:nth-child(6){grid-column:span 3}
 /* the wide cells get the type scale their span earns */
 .svc:nth-child(1) h3,.svc:nth-child(4) h3{font-size:clamp(1.5rem,2.4vw,1.95rem)}
-.svc{position:relative;padding:2.4rem 2rem 2.2rem;background:var(--glass);backdrop-filter:blur(5px);overflow:hidden;
+.svc{position:relative;padding:clamp(1.9rem,2.6vw,2.7rem) clamp(1.5rem,2.2vw,2.2rem) clamp(1.8rem,2.4vw,2.5rem);
+  background:var(--glass);backdrop-filter:blur(5px);overflow:hidden;
   transition:background .4s var(--ease)}
 .svc::before{content:'';position:absolute;top:0;inset-inline:0;height:2px;background:var(--grad);
   transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
@@ -490,7 +552,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
    WHY
    ==================================================================== */
 .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border:1px solid var(--line);background:var(--line)}
-.wcard{position:relative;padding:2.4rem 2rem;background:var(--glass);backdrop-filter:blur(5px);overflow:hidden;transition:background .4s var(--ease)}
+.wcard{position:relative;padding:clamp(1.9rem,2.6vw,2.7rem) clamp(1.5rem,2.2vw,2.2rem);background:var(--glass);backdrop-filter:blur(5px);overflow:hidden;transition:background .4s var(--ease)}
 .wcard::before{content:'';position:absolute;top:0;inset-inline:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
 .wcard:hover{background:var(--glass-2)}
 .wcard:hover::before{transform:scaleX(1)}
@@ -659,8 +721,6 @@ footer{position:relative;z-index:1;padding:clamp(48px,6vw,72px) 0 38px;border-to
 }
 @media (max-width:600px){
   .svc-grid,.why-grid,.stats{grid-template-columns:1fr}
-  .hero-btns{flex-direction:column;width:100%;max-width:340px}
-  .hero-btns .btn{width:100%}
   .crow{grid-template-columns:auto 1fr;gap:.3rem .8rem}
   .crow-lbl{grid-column:1/-1}
   .proc-node{width:52px;height:52px;font-size:1rem}

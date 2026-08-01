@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Job Power HR | ג'וב פאוור · גיוס והשמת משאבי אנוש</title>
-<meta name="description" content="Job Power HR — חברת גיוס והשמת משאבי אנוש מחדרה, מאז 2010. מחברים בין אנשים מוכשרים להזדמנויות הנכונות. טיפול אישי, מאגר עובדים איכותי ותוצאות מוכחות.">
+<meta name="description" content="Job Power HR, חברת גיוס והשמת משאבי אנוש מחדרה, מאז 2010. מחברים בין אנשים מוכשרים להזדמנויות הנכונות. טיפול אישי, מאגר עובדים איכותי ותוצאות מוכחות.">
 <meta name="theme-color" content="#06050d">
 <meta property="og:title" content="Job Power HR | ג'וב פאוור">
 <meta property="og:description" content="מחברים בין אנשים מוכשרים להזדמנויות הנכונות. גיוס והשמה לכל תחום מקצועי.">
@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=13">
+<link rel="stylesheet" href="assets/css/style.css?v=17">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -68,21 +68,30 @@
   <a href="#contact"><span>06</span> צור קשר</a>
 </div>
 
-<!-- ===== HERO ===== -->
-<header class="hero" id="top">
-  <h1 class="hero-title"><span class="ht-mark">ג'וב פאוור</span><span class="ht-sub">גיוס והשמת משאבי אנוש · חדרה · מאז 2010</span></h1>
+<!-- ===== HERO =====
+     Two routes, one decision. The cut now runs the full height of the hero, behind the
+     title as well, so the page reads as one field split by a single lit diagonal instead
+     of a title band sitting on top of a separate pair of panels — that horizontal join
+     was the thing that made the whole composition look unfinished.
 
-  <!-- Split screen: two routes, one decision. The diagonal is the point — a vertical
-       divider would read as a table of two equal columns, and the cut makes the page
-       choose a direction. Each half is one link, so on touch the whole panel is the
-       target; the buttons inside are the affordance for pointers. -->
+     The geometry is two numbers, --cut-t and --cut-b (where the diagonal meets the top
+     and bottom edges). The panel clip, the seam light and the hover states all read the
+     same pair, so nothing can drift out of register. Each half is one link, so on touch
+     the whole panel is the target; the buttons inside are the affordance for pointers. -->
+<header class="hero" id="top">
+  <h1 class="hero-title">
+    <span class="ht-mark">ג'וב פאוור</span>
+    <span class="ht-rule" aria-hidden="true"></span>
+    <span class="ht-sub">גיוס והשמת משאבי אנוש · חדרה · מאז 2010</span>
+  </h1>
+
   <div class="hero-split">
     <a class="sh sh--seek" href="#contact">
       <span class="sh-glow" aria-hidden="true"></span>
       <span class="sh-body">
         <span class="sh-kicker">מחפשים עבודה</span>
         <span class="sh-head">המשרה הבאה<br>כבר במאגר</span>
-        <span class="sh-line">שולחים קורות חיים, ואנחנו מתאימים אתכם למשרה שבאמת מתאימה — בליווי אישי עד היום הראשון.</span>
+        <span class="sh-line">שולחים קורות חיים, ואנחנו מתאימים אתכם למשרה שבאמת מתאימה, בליווי אישי עד היום הראשון.</span>
         <span class="sh-cta">לשליחת קורות חיים <i aria-hidden="true">←</i></span>
       </span>
     </a>
@@ -96,18 +105,14 @@
         <span class="sh-cta">לאיתור עובדים <i aria-hidden="true">←</i></span>
       </span>
     </a>
-  </div>
 
-  <a href="#about" class="hero-scroll" aria-label="גלול למטה"><span>גלול</span><span class="scroll-rule"></span></a>
+    <!-- The light along the cut. It sits above both panels so the bloom spills onto each
+         side of the seam; inside it the band is clipped first and blurred by the wrapper
+         after, which is the only ordering that gives a soft edge — blurring a clipped
+         element the other way round just yields a hard-edged smudge. -->
+    <span class="hero-seam" aria-hidden="true"><span class="hero-seam-bloom"></span></span>
+  </div>
 </header>
-
-<!-- ===== MARQUEE ===== -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
-    <span>מקצועות טכניים <i>·</i> מחשוב ותוכנה <i>·</i> אדמיניסטרציה <i>·</i> מכירות ושיווק <i>·</i> אקדמאים <i>·</i> שירותים ואחזקה <i>·</i></span>
-    <span>מקצועות טכניים <i>·</i> מחשוב ותוכנה <i>·</i> אדמיניסטרציה <i>·</i> מכירות ושיווק <i>·</i> אקדמאים <i>·</i> שירותים ואחזקה <i>·</i></span>
-  </div>
-</div>
 
 <!-- ===== STATS ===== -->
 <section class="stats container">
@@ -125,7 +130,7 @@
     </header>
 
     <div class="about-body">
-      <p class="lead" data-reveal="rise"><span class="brand">Job Power</span> הוקמה בחדרה בשנת 2010 ועוסקת בגיוס והשמת משאבי אנוש למקומות עבודה — מטפלים בכל שלבי האיתור, הגיוס, המיון, האבחון והיישום, ומבטיחים שירות מקצועי ברמת איכות גבוהה ביותר.</p>
+      <p class="lead" data-reveal="rise"><span class="brand">Job Power</span> הוקמה בחדרה בשנת 2010 ועוסקת בגיוס והשמת משאבי אנוש למקומות עבודה. מטפלים בכל שלבי האיתור, הגיוס, המיון, האבחון והיישום, ומבטיחים שירות מקצועי ברמת איכות גבוהה ביותר.</p>
       <div class="about-cols" data-reveal="rise">
         <p>צוות Job Power מותאם לאופי שירותיה במתן טיפול אישי ומתמיד ללקוחות. שירותי ההשמה מבוססים על מאגר גדול ואיכותי של עובדים מכל התחומים.</p>
         <p>אנו נעזרים במאגר נתונים המתעדכן מדי יום ומקיימים משובים תקופתיים על מנת לעמוד בשביעות רצון לקוחותינו לאורך זמן.</p>
@@ -193,7 +198,7 @@
       <p class="rail-cap rail-cap--roles">משרות פתוחות</p>
     </div>
 
-    <p class="match-foot">המאגר מתעדכן מדי יום — משני הכיוונים</p>
+    <p class="match-foot">המאגר מתעדכן מדי יום, משני הכיוונים</p>
   </div>
 </section>
 
@@ -202,7 +207,7 @@
   <div class="container">
     <header class="sec-head">
       <h2 class="title" data-reveal="mask">השמה לכל תחום מקצועי</h2>
-      <p class="sub" data-reveal="rise">פתרונות גיוס מקצועיים בשישה תחומים — מינימום זמן תגובה, מקסימום יעילות.</p>
+      <p class="sub" data-reveal="rise">פתרונות גיוס מקצועיים בשישה תחומים, עם מינימום זמן תגובה ומקסימום יעילות.</p>
     </header>
 
     <div class="svc-grid" data-reveal-stagger>
@@ -274,7 +279,7 @@
     <header class="sec-head">
       <div class="kicker" data-reveal="rise"><span class="k-idx">03</span><span class="k-rule"></span><span>איך זה עובד</span></div>
       <h2 class="title" data-reveal="mask">התהליך שלנו, צעד אחר צעד</h2>
-      <p class="sub" data-reveal="rise">מהפנייה הראשונה ועד ההשמה המוצלחת — ליווי מקצועי בכל שלב.</p>
+      <p class="sub" data-reveal="rise">מהפנייה הראשונה ועד ההשמה המוצלחת, ליווי מקצועי בכל שלב.</p>
     </header>
 
     <div class="proc-wrap">
@@ -293,7 +298,7 @@
       </div>
       <div class="proc-step">
         <div class="proc-node">04</div>
-        <div class="proc-body"><h3>אבחון</h3><p>הערכה מעמיקה והתאמה אישית של המועמד לתפקיד — כדי להבטיח השמה שמחזיקה לאורך זמן.</p></div>
+        <div class="proc-body"><h3>אבחון</h3><p>הערכה מעמיקה והתאמה אישית של המועמד לתפקיד, כדי להבטיח השמה שמחזיקה לאורך זמן.</p></div>
       </div>
       <div class="proc-step">
         <div class="proc-node">05</div>
@@ -317,7 +322,7 @@
     <div class="why-grid" data-reveal-stagger>
       <article class="wcard"><div class="wcard-idx">01</div><h3>חיסכון בזמן ובכסף</h3><p>חיסכון זמן יקר בגיוס וסינון מועמדים, וחיסכון בפרסום מודעות דרושים.</p></article>
       <article class="wcard"><div class="wcard-idx">02</div><h3>מועמדים מתאימים</h3><p>איתור מקצועי תוך מינימום זמן תגובה ומקסימום יעילות, אדיבות והבנה.</p></article>
-      <article class="wcard"><div class="wcard-idx">03</div><h3>טיפול אישי</h3><p>ליווי צמוד לאורך כל התהליך — עבור המעסיקים וגם עבור המועמדים.</p></article>
+      <article class="wcard"><div class="wcard-idx">03</div><h3>טיפול אישי</h3><p>ליווי צמוד לאורך כל התהליך, עבור המעסיקים וגם עבור המועמדים.</p></article>
       <article class="wcard"><div class="wcard-idx">04</div><h3>מאגר מתעדכן יומי</h3><p>מאגר נתונים גדול ואיכותי המתעדכן מדי יום לכל דרישה ולכל תחום.</p></article>
       <article class="wcard"><div class="wcard-idx">05</div><h3>משוב תקופתי</h3><p>מקיימים משובים שוטפים כדי לוודא שביעות רצון מלאה לאורך זמן.</p></article>
       <article class="wcard"><div class="wcard-idx">06</div><h3>ניסיון של 15+ שנה</h3><p>מאז 2010, ניסיון עשיר בהשמות מוצלחות בענפים מגוונים ברחבי הארץ.</p></article>
@@ -345,7 +350,7 @@
 
     <header class="sec-head">
       <h2 class="title big" data-reveal="mask">מה הלקוחות שלנו <em>אומרים</em></h2>
-      <p class="sub" data-reveal="rise">חמישה כוכבים ומילים מהלב — ממי שכבר מצא את מקומו, או את העובדים שלו, דרך Job Power.</p>
+      <p class="sub" data-reveal="rise">חמישה כוכבים ומילים מהלב, ממי שכבר מצא את מקומו, או את העובדים שלו, דרך Job Power.</p>
     </header>
 
     <!-- testimonials wall -->
@@ -436,7 +441,7 @@
   <div class="container">
     <header class="sec-head">
       <h2 class="title big" data-reveal="mask">בואו נמצא לכם<br>את <em>האנשים הנכונים</em></h2>
-      <p class="sub" data-reveal="rise">מחפשים עבודה? צריכים לגייס? אנחנו כאן — דברו איתנו עוד היום.</p>
+      <p class="sub" data-reveal="rise">מחפשים עבודה? צריכים לגייס? אנחנו כאן. דברו איתנו עוד היום.</p>
     </header>
 
     <div class="contact-rows" data-reveal-stagger>
@@ -514,6 +519,6 @@
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
 <script defer src="assets/js/a11y.js"></script>
-<script defer src="assets/js/main.js?v=16"></script>
+<script defer src="assets/js/main.js?v=19"></script>
 </body>
 </html>

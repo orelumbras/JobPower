@@ -125,17 +125,23 @@
     }
     function close() {
       if (window.gsap && !doc.hidden) {
-        gsap.to(pre, { yPercent: -100, duration: 1, ease: 'power4.inOut',
+        gsap.to(pre, { yPercent: -100, duration: .85, ease: 'power4.inOut',
           onComplete: () => { pre.remove(); reveal(); } });
+        /* Hand the page over while the curtain is still lifting. Waiting for onComplete
+           meant the hero could not begin until the preloader had entirely gone, and the
+           two waits stacked: counter, then slide, then a hero intro that had not started.
+           Overlapping them turns four seconds of nothing into one continuous movement.
+           reveal() is idempotent, so the onComplete above is still the safety net. */
+        gsap.delayedCall(.35, reveal);
       } else { pre.remove(); reveal(); }
     }
     let p = 0;
     const tick = setInterval(() => {
-      p += Math.random() * 14 + 7;
-      if (p >= 100) { p = 100; clearInterval(tick); setTimeout(close, 300); }
+      p += Math.random() * 16 + 9;
+      if (p >= 100) { p = 100; clearInterval(tick); setTimeout(close, 200); }
       if (bar) bar.style.width = Math.min(p, 100) + '%';
       if (count) count.textContent = String(Math.min(Math.floor(p), 100)).padStart(3, '0');
-    }, 120);
+    }, 95);
     const failsafe = setTimeout(() => { if (pre.isConnected) pre.remove(); reveal(); }, 7000);
   }
 
@@ -199,6 +205,39 @@
   /* ===============================================================
      6. GSAP MOTION
      =============================================================== */
+  /* Wrap each <br>-separated run of a heading in its own overflow-hidden box so the line
+     can be slid up out of a mask.
+
+     Splitting on <br> rather than on words is deliberate. Word splitting would break the
+     one heading that carries a gradient <em> straddling a prefix ("ל" + "הזדמנויות"),
+     and it would put every word in its own inline-block, which is exactly the wrong thing
+     to hand a bidi line-breaker in an RTL document. The <br>s already mark every line the
+     copy intends; a segment that wraps on a narrow screen just reveals as one taller
+     block, which is the harmless failure. */
+  function splitTitleLines(el) {
+    if (el.dataset.split) return [...el.querySelectorAll('.tl-i')];
+    const frag = doc.createDocumentFragment();
+    let inner;
+    const openLine = () => {
+      const line = doc.createElement('span');
+      line.className = 'tl';
+      inner = doc.createElement('span');
+      inner.className = 'tl-i';
+      line.appendChild(inner);
+      frag.appendChild(line);
+    };
+    openLine();
+    // snapshot first: the loop clones into a subtree that is about to replace this one
+    [...el.childNodes].forEach(n => {
+      if (n.nodeName === 'BR') openLine();
+      else inner.appendChild(n.cloneNode(true));
+    });
+    el.textContent = '';
+    el.appendChild(frag);
+    el.dataset.split = '1';
+    return [...el.querySelectorAll('.tl-i')];
+  }
+
   function initMotion() {
     if (reduceMotion || !window.gsap) {
       doc.querySelectorAll('[data-reveal],[data-reveal-stagger]>*').forEach(el => {
@@ -208,25 +247,57 @@
     }
     gsap.registerPlugin(ScrollTrigger);
 
-    /* The split is the hero now, so the intro introduces the choice: the title, then
-       each panel's copy, the seekers' side first because it is the reading side. Hidden
-       here rather than in CSS so that with no JS, or under reduced motion, the panels are
-       simply present instead of never arriving. */
-    gsap.set('.hero-title, .sh-body, .hero-scroll', { opacity: 0, y: 18 });
+    /* The split is the hero now, so the intro introduces the choice: the cut opens out of
+       a vertical seam into its angle, then the title, then each panel's copy, the seekers'
+       side first because it is the reading side.
+
+       The cut is animated through --cut-t / --cut-b rather than through clip-path itself.
+       Writing clip-path directly would leave an inline value on .sh--seek that outranks
+       the :has() hover rules for the rest of the session, and it would leave the seam
+       light — drawn by pseudo-elements GSAP cannot reach — stranded at the final angle
+       while the colour boundary swept past it. Driving the variable moves the panel, its
+       edge and its glow as one thing. */
+    gsap.set('.hero-title, .sh-body', { opacity: 0, y: 18 });
+    const hero = doc.querySelector('.hero');
+    const split = doc.querySelector('.hero-split');
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-    tl.to('.hero-title', { opacity: 1, y: 0, duration: .7 })
-      .to('.sh--seek .sh-body', { opacity: 1, y: 0, duration: .8 }, '-=.35')
-      .to('.sh--hire .sh-body', { opacity: 1, y: 0, duration: .8 }, '-=.62')
-      .to('.hero-scroll', { opacity: 1, y: 0, duration: .6 }, '-=.4');
+
+    if (split) {
+      hero.classList.add('is-intro');
+      tl.fromTo(split,
+        { '--cut-t': '50%', '--cut-b': '50%' },
+        { '--cut-t': '61%', '--cut-b': '39%', duration: 1.05, ease: 'power4.inOut',
+          onComplete() {
+            // hand the geometry back to the stylesheet, or hover has nothing left to move
+            split.style.removeProperty('--cut-t');
+            split.style.removeProperty('--cut-b');
+            hero.classList.remove('is-intro');
+          } }, 0);
+    }
+    /* Absolute positions, not relative ones: '-=' offsets count back from the end of the
+       whole timeline, and with the cut still running that end keeps moving, which pushed
+       the copy out to nearly five seconds after load. The three overlap on purpose. */
+    tl.to('.hero-title', { opacity: 1, y: 0, duration: .75 }, .18)
+      .to('.sh--seek .sh-body', { opacity: 1, y: 0, duration: .8 }, .42)
+      .to('.sh--hire .sh-body', { opacity: 1, y: 0, duration: .8 }, .58);
 
     // generic reveals (everything outside the hero)
     gsap.utils.toArray('[data-reveal]').forEach(el => {
       if (el.closest('.hero')) return;
-      const st = { trigger: el, start: 'top 92%' };
       if (el.dataset.reveal === 'mask') {
-        gsap.to(el, { clipPath: 'inset(0 -.14em -.14em -.14em)', duration: .55, ease: 'power2.out', scrollTrigger: st });
+        /* Headings arrive a line at a time out of their own mask. The old version wiped
+           the whole block in .55s starting at 'top 92%' — by the time a heading was far
+           enough up the screen to look at, the wipe had already finished off-view, which
+           is why it read as no animation at all. Later trigger, longer travel, and a
+           stagger so a two-line heading actually resolves in front of you. */
+        const lines = splitTitleLines(el);
+        el.style.clipPath = 'none';
+        gsap.set(lines, { yPercent: 112 });
+        gsap.to(lines, { yPercent: 0, duration: .95, ease: 'power4.out', stagger: .085,
+          scrollTrigger: { trigger: el, start: 'top 86%' } });
       } else {
-        gsap.to(el, { opacity: 1, y: 0, duration: .6, ease: 'power2.out', scrollTrigger: st });
+        gsap.to(el, { opacity: 1, y: 0, duration: .75, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' } });
       }
     });
     gsap.utils.toArray('[data-reveal-stagger]').forEach(g => {
@@ -239,8 +310,13 @@
     if (bgv) gsap.to(bgv, { scale: 1.16, ease: 'none',
       scrollTrigger: { trigger: doc.body, start: 'top top', end: 'bottom bottom', scrub: true } });
 
-    // the whole hero recedes as you leave it; there is no inner column to move now
-    gsap.to('.hero-split, .hero-title', { yPercent: 8, opacity: .3, ease: 'none',
+    /* The hero drifts as you leave it. No opacity here: this tween used to fade to .3,
+       and because it was built while the intro's gsap.set still held the title at 0 it
+       captured 0 as its start value — so the first scroll of the page handed the title
+       straight to the scrub, which drove it to .3 and never gave it back. "ג'וב פאוור"
+       simply went out the moment you touched the wheel. Movement alone reads as depth
+       and has no state to get stuck in. */
+    gsap.to('.hero-split, .hero-title', { yPercent: 7, ease: 'none',
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
 
     // process timeline progress + active steps
