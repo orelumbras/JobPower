@@ -273,9 +273,9 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .sh--brand{z-index:1;
   clip-path:polygon(calc(var(--a-t) + 1px) 0,calc(var(--a-b) + 1px) 100%,
                     calc(var(--b-b) - 1px) 100%,calc(var(--b-t) - 1px) 0)}
-.sh--brand .sh-glow{opacity:.96;background:
+.sh--brand .sh-glow{opacity:.86;background:
   radial-gradient(96% 62% at 50% 34%,rgba(178,148,255,.62),rgba(109,63,240,.34) 44%,transparent 76%),
-  linear-gradient(190deg,rgba(88,40,200,.6),rgba(22,10,58,.68) 76%)}
+  linear-gradient(190deg,rgba(88,40,200,.5),rgba(22,10,58,.56) 76%)}
 
 /* Each sliver puts its copy at the end where it is widest — the seekers' low, because
    their cut leans away downward, the employers' high for the same reason in reverse. The
@@ -318,8 +318,14 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 
    pointer-events only on the link, so the h1's box does not sit across the top of both
    side panels and swallow the hover that moves the cuts. */
-.hero-title{grid-area:1/1;z-index:6;align-self:start;justify-self:center;pointer-events:none;
-  padding:calc(var(--nav-h) + clamp(2rem,7vh,4.4rem)) var(--pad) 0}
+/* Centred, not pinned to the top. Sitting high, the lockup ended at about 37% of the
+   first screen and everything below it was empty violet: the composition was drawn
+   around the state where a side is thrown OPEN and that half is full, but the resting
+   state is the one every visitor lands on and the only one a phone ever gets. Centred,
+   it sits between the two side headlines (which fall at roughly 26% and 74%) and the
+   closing strip below closes the frame. */
+.hero-title{grid-area:1/1;z-index:6;align-self:center;justify-self:center;pointer-events:none;
+  padding:var(--nav-h) var(--pad) clamp(3rem,9vh,6rem)}
 .ht-link{pointer-events:auto;position:relative;display:flex;flex-direction:column;
   align-items:center;text-align:center;gap:clamp(.5rem,1.3vh,.9rem);padding:.4rem 1.6rem 0;
   transition:transform .4s var(--ease)}
@@ -361,7 +367,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .sh:is(:hover,:focus-within) .sh-head{font-size:clamp(1.5rem,2.9vw,2.6rem)}
 /* brightened deliberately: --text-mute sat too close to the field to read at a glance */
 .sh-line{display:block;color:#f0ecff;font-weight:300;font-size:clamp(.95rem,1.3vw,1.06rem);max-width:36ch}
-.sh-cta{margin-top:1rem;display:inline-flex;align-items:center;gap:.55rem;
+.sh-cta{margin-top:.85rem;font-size:.84rem;padding-block:.55rem;display:inline-flex;align-items:center;gap:.55rem;
   padding:.85rem 1.7rem;border-radius:999px;font-weight:700;font-size:1rem;color:#fff;
   background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.05) 42%,transparent 64%),
     var(--sh-cta),rgba(6,5,13,.34);
@@ -370,6 +376,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
     inset 0 0 0 1px rgba(255,255,255,.16),0 10px 28px -12px rgba(0,0,0,.7);
   transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
 .sh-cta i{font-style:normal;transition:transform .35s var(--ease)}
+.sh:is(:hover,:focus-within) .sh-cta{font-size:.95rem;padding-block:.7rem}
 .sh:hover .sh-cta{transform:translateY(-2px)}
 .sh:hover .sh-cta i{transform:translateX(-5px)}
 .sh-reveal{display:block}
@@ -411,6 +418,27 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
 .hero::after{content:'';position:absolute;inset-inline:0;bottom:0;z-index:4;pointer-events:none;
   height:clamp(56px,9vh,110px);background:linear-gradient(180deg,transparent,var(--bg) 94%)}
 
+/* ---- the closing strip ----
+   A base for the hero, and the three facts a stranger checks before anything else: how
+   long you have existed, what you cover, where you are. It also carries the scroll cue
+   back, which was dropped when the hero was rebuilt and never replaced. Above the bottom
+   fade, so it stays legible where the panels are already dissolving. Desktop only: on a
+   phone the three fields stack and there is no dead space for it to solve. */
+.hero-foot{grid-area:1/1;z-index:5;align-self:end;
+  display:flex;align-items:center;justify-content:space-between;gap:1.2rem 2rem;flex-wrap:wrap;
+  margin:0 var(--pad) clamp(1.5rem,4vh,2.6rem);padding-left:64px;
+  padding-top:clamp(.8rem,2vh,1.2rem);border-top:1px solid rgba(255,255,255,.18)}
+.hero-foot ul{display:flex;gap:clamp(1rem,3vw,2.6rem);list-style:none;flex-wrap:wrap}
+.hero-foot li{display:flex;align-items:baseline;gap:.5rem;
+  font-size:.85rem;color:rgba(245,242,255,.8);text-shadow:0 2px 14px rgba(6,5,13,.6)}
+.hero-foot li b{font-family:var(--font-lat);font-weight:600;font-size:1.02rem;color:#fff}
+.hero-foot .cue{display:inline-flex;align-items:center;gap:.55rem;
+  font-size:.72rem;letter-spacing:.2em;font-weight:500;color:rgba(226,214,255,.72)}
+.hero-foot .cue i{font-style:normal;animation:cueBob 1.9s var(--ease) infinite}
+@keyframes cueBob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@media (prefers-reduced-motion:reduce){.hero-foot .cue i{animation:none}}
+@media (max-width:860px){.hero-foot{display:none}}
+
 /* while the intro opens the cuts the clips are being written every frame, so the hover
    transition must stay out of the way or it spends the whole animation chasing them */
 .hero.is-intro .sh,
@@ -431,7 +459,7 @@ body.menu-open .mobile-menu a:nth-child(6){transition-delay:.38s}
      it. The title overlays the brand field; the two side panels stack below. */
   .sh{display:flex;align-items:flex-start;justify-content:flex-start;
     padding-inline:var(--pad);grid-column:1}
-  .hero-title{grid-row:1;grid-column:1}
+  .hero-title{grid-row:1;grid-column:1;align-self:start}
   .sh--brand{grid-row:1}
   .sh--seek{grid-row:2}
   .sh--hire{grid-row:3}

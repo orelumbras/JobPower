@@ -17,7 +17,7 @@
      resolve to the identical 8 woff2 files, 139 KB. The range form only shortens the CSS
      (8 @font-face rules instead of 47). Measured — not worth a change. -->
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=25">
+<link rel="stylesheet" href="assets/css/style.css?v=26">
 <!-- the logo paints in the preloader, before anything else — fetch it alongside the CSS -->
 <link rel="preload" as="image" href="assets/img/logo.png">
 </head>
@@ -108,8 +108,8 @@
         <span class="sh-head" data-i18n-html="hero.seek.head">המשרה הבאה<br>כבר במאגר</span>
         <span class="sh-reveal">
           <span class="sh-line" data-i18n="hero.seek.line">שולחים קורות חיים, ואנחנו מתאימים אתכם למשרה שבאמת מתאימה, בליווי אישי עד היום הראשון.</span>
-          <span class="sh-cta" data-i18n-html="hero.seek.cta">לשליחת קורות חיים <i aria-hidden="true">←</i></span>
         </span>
+        <span class="sh-cta" data-i18n-html="hero.seek.cta">לשליחת קורות חיים <i aria-hidden="true">←</i></span>
       </span>
     </a>
 
@@ -120,8 +120,8 @@
         <span class="sh-head" data-i18n-html="hero.hire.head">העובד הנכון,<br>בלי חודשים של חיפוש</span>
         <span class="sh-reveal">
           <span class="sh-line" data-i18n="hero.hire.line">מאגר שמתעדכן מדי יום, מיון ואבחון מקצועי, ומועמדים מסוננים אצלכם על השולחן.</span>
-          <span class="sh-cta" data-i18n-html="hero.hire.cta">לאיתור עובדים <i aria-hidden="true">←</i></span>
         </span>
+        <span class="sh-cta" data-i18n-html="hero.hire.cta">לאיתור עובדים <i aria-hidden="true">←</i></span>
       </span>
     </a>
 
@@ -131,6 +131,20 @@
          element the other way round just yields a hard-edged smudge. -->
     <span class="hero-seam hero-seam--a" aria-hidden="true"><span class="hero-seam-bloom"></span></span>
     <span class="hero-seam hero-seam--b" aria-hidden="true"><span class="hero-seam-bloom"></span></span>
+
+    <!-- The hero used to stop on nothing: below the lockup sat more than half a screen of
+         empty violet, because the composition was built around the OPEN state while the
+         resting state is what every visitor actually lands on. This strip gives the frame
+         a base, puts the three facts a stranger checks first on the first screen, and
+         carries back the scroll cue that was dropped when the hero was rebuilt. -->
+    <div class="hero-foot">
+      <ul>
+        <li><b>2010</b><span data-i18n="hero.foot.since">שנת הקמה</span></li>
+        <li><b>6</b><span data-i18n="hero.foot.fields">תחומי השמה</span></li>
+        <li><span data-i18n="hero.foot.addr">הלל יפה 20, חדרה</span></li>
+      </ul>
+      <span class="cue" aria-hidden="true"><span data-i18n="hero.foot.cue">גלול</span> <i>↓</i></span>
+    </div>
   </div>
 </header>
 
@@ -532,7 +546,7 @@
      from localStorage before the parser reaches the body, so a returning Russian visitor
      never watches the page lay itself out right-to-left and then flip. It is small and
      does no DOM work at that point. -->
-<script src="assets/js/i18n.js?v=2"></script>
+<script src="assets/js/i18n.js?v=3"></script>
 <script defer src="assets/vendor/gsap.min.js"></script>
 <script defer src="assets/vendor/ScrollTrigger.min.js"></script>
 <script defer src="assets/vendor/lenis.min.js"></script>
